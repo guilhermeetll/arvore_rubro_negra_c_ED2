@@ -17,4 +17,6 @@ typedef struct node {
 
 Node* criar_no(char*);
 
+void imprime(Node* , int);
+
 #endif
