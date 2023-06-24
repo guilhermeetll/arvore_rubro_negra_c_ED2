@@ -2,12 +2,12 @@
 #include "stdlib.h"
 #include "tree.h"
 
-int main(){
-    Node* raiz = criar_no("teste");
+int main()
+{
+    Node* raiz = criar_no("teste4");
     raiz->esq = criar_no("teste2");
-    raiz->dir = criar_no("teste3");
-    raiz->dir->dir = criar_no("teste4");
-    raiz->dir->esq = criar_no("teste2");
+    raiz->dir = criar_no("teste5");
+    raiz->dir->dir = criar_no("teste6");
     int resp;
     printf("***************************************************\n");
     printf("| 1- Cadastrar produto                            |\n");
@@ -18,7 +18,8 @@ int main(){
     printf("| 6- Imprimir a arvore                            |\n");
     printf("| 7- Sair                                         |\n");
     printf("***************************************************\n");
-    do{
+    do
+    {
         printf(">> ");
         scanf("%d", &resp);
         switch (resp)
@@ -29,6 +30,15 @@ int main(){
         case 2:
             printf("2\n");
             break;
+        case 3:
+            Node* no = malloc(sizeof(Node));
+            no = busca(raiz, "teste4");
+            if (no == NULL){
+                printf("Registro não encontrado\n");
+            }
+            else {printf("%s\n", no->produto);}
+            break;
+            
         case 6:
             imprime(raiz, 1);
             break;

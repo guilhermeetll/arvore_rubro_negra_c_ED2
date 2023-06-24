@@ -1,12 +1,14 @@
 #ifndef TREE_H
 #define TREE_H
 
-typedef enum cor{
+typedef enum cor
+{
     BLACK,
     RED
 }Cor;
 
-typedef struct node {
+typedef struct node 
+{
     char produto[300];
     Cor cor;
     int qtd_produto;
@@ -18,5 +20,7 @@ typedef struct node {
 Node* criar_no(char*);
 
 void imprime(Node* , int);
+
+Node* busca(Node*, char*);
 
 #endif
