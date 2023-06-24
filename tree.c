@@ -3,11 +3,6 @@
 #include "tree.h"
 #include "string.h"
 
-Tree *cria_tree(){
-    Tree *raiz = malloc(sizeof(Tree));
-    raiz->raiz = NULL;
-    return raiz;
-}
 
 Node* criar_no(char* produto){
     Node* no = malloc(sizeof(Node));

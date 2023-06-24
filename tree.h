@@ -14,12 +14,7 @@ typedef struct node {
     struct node *dir;
 }Node;
 
-typedef struct tree
-{
-    Node *raiz;
-}Tree;
 
-Tree* cria_tree();
 Node* criar_no(char*);
 
 #endif
