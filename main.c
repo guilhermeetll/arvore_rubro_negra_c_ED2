@@ -3,6 +3,11 @@
 #include "tree.h"
 
 int main(){
+    Node* raiz = criar_no("teste");
+    raiz->esq = criar_no("teste2");
+    raiz->dir = criar_no("teste3");
+    raiz->dir->dir = criar_no("teste4");
+    raiz->dir->esq = criar_no("teste2");
     int resp;
     printf("***************************************************\n");
     printf("| 1- Cadastrar produto                            |\n");
@@ -13,30 +18,26 @@ int main(){
     printf("| 6- Imprimir a arvore                            |\n");
     printf("| 7- Sair                                         |\n");
     printf("***************************************************\n");
-    // do{
-    //     printf(">> ");
-    //     scanf("%d", &resp);
-    //     switch (resp)
-    //     {
-    //     case 1:
-    //         printf("1\n");
-    //         break;
-    //     case 2:
-    //         printf("2\n");
-    //         break;
-    //     case 7:
-    //         printf("Exit...\n");
-    //         break;
-    //     default:
-    //         break;
-    //     }
-    // }while (resp != 7);
-    Node* raiz = criar_no("teste");
-    raiz->esq = criar_no("teste2");
-    raiz->dir = criar_no("teste3");
-    raiz->dir->dir = criar_no("teste4");
-    raiz->dir->esq = criar_no("teste2");
-    imprime(raiz, 1);
-
+    do{
+        printf(">> ");
+        scanf("%d", &resp);
+        switch (resp)
+        {
+        case 1:
+            printf("1\n");
+            break;
+        case 2:
+            printf("2\n");
+            break;
+        case 6:
+            imprime(raiz, 1);
+            break;
+        case 7:
+            printf("Exit...\n");
+            break;
+        default:
+            break;
+        }
+    }while (resp != 7);
     return 0;
 }
