@@ -16,11 +16,12 @@ void menu(){
 
 int main()
 {
-    Node* raiz = criar_no("teste4");
-    raiz->esq = criar_no("teste2");
-    raiz->dir = criar_no("teste5");
-    raiz->dir->dir = criar_no("teste6");
-    int resp;
+    Node* raiz = NULL;
+    //raiz->esq = criar_no("teste2");
+    //raiz->dir = criar_no("teste5");
+    //raiz->dir->dir = criar_no("teste6");
+    int resp, quantidade;
+    char nome[100];
     do
     {   menu();
         printf(">> ");
@@ -28,7 +29,15 @@ int main()
         switch (resp)
         {
         case 1:
-            printf("1\n");
+            Node* aux = NULL;
+            printf("Digite o nome do produto: ");
+            scanf("%s", nome);
+            printf("Digite a quantidade: ");
+            scanf("%d", &quantidade);
+            if (raiz == NULL) {
+                raiz = criar_no(nome, quantidade);
+            }
+            printf("\nAdicionado com sucesso");
             break;
         case 2:
             printf("2\n");
