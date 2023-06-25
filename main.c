@@ -3,7 +3,7 @@
 #include "tree.h"
 
 void menu(){
-    printf("***************************************************\n");
+    printf("\n***************************************************\n");
     printf("| 1- Cadastrar produto                            |\n");
     printf("| 2- Excluir produto                              |\n");
     printf("| 3- Atualizar a quantidade do produto no estoque |\n");
@@ -36,8 +36,10 @@ int main()
             scanf("%d", &quantidade);
             if (raiz == NULL) {
                 raiz = criar_no(nome, quantidade);
+                printf("\nAdicionado com sucesso");
+            } else {
+                raiz = insertNode(raiz, nome);
             }
-            printf("\nAdicionado com sucesso");
             break;
         case 2:
             printf("2\n");

@@ -23,4 +23,6 @@ void imprime(Node* , int);
 
 Node* busca(Node*, char*);
 
+Node* insertNode(Node*, char*);
+
 #endif
