@@ -7,12 +7,24 @@
 Node* criar_no(char* produto, int quantidade)
 {
     Node* no = malloc(sizeof(Node));
-    no->cor = BLACK;
+    no->cor = RED;
     no->esq = NULL;
     no->dir = NULL;
     strcpy(no->produto, produto);
     no->qtd_produto = quantidade;
     return no;
+}
+
+Node* createNode(char* produto, Cor color) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+
+    strcpy(newNode->produto, produto);
+    newNode->qtd_produto = 100;
+    newNode->esq = NULL;
+    newNode->dir = NULL;
+    newNode->cor = color;
+
+    return newNode;
 }
 
 void imprime(Node* raiz, int b)
@@ -73,7 +85,7 @@ Node* rotateRight(Node* node) {
 
 Node* insertNode(Node* raiz, char* produto) {
     if (raiz == NULL)
-        return criar_no(produto, 100);
+        return createNode(produto, RED);
 
     // Inserção do nó seguindo as regras da árvore Red-Black
     int tam = strcmp(produto, raiz->produto);
@@ -98,4 +110,33 @@ Node* insertNode(Node* raiz, char* produto) {
         swapColors(raiz, raiz->esq);
 
     return raiz;
+}
+
+void printSpaces(int count) {
+    for (int i = 0; i < count; i++) {
+        printf(" ");
+    }
+}
+
+void printTreeHelper(Node* root, int space) {
+    if (root == NULL)
+        return;
+
+    space += 5;
+
+    printTreeHelper(root->dir, space);
+
+    printf("\n");
+    printSpaces(space);
+    printf("%s", root->produto);
+    if (root->cor == RED)
+        printf(" (R)\n");
+    else
+        printf(" (B)\n");
+
+    printTreeHelper(root->esq, space);
+}
+
+void printTree(Node* root) {
+    printTreeHelper(root, 0);
 }

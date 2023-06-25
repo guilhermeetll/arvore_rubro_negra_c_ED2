@@ -34,12 +34,8 @@ int main()
             scanf("%s", nome);
             printf("Digite a quantidade: ");
             scanf("%d", &quantidade);
-            if (raiz == NULL) {
-                raiz = criar_no(nome, quantidade);
-                printf("\nAdicionado com sucesso");
-            } else {
-                raiz = insertNode(raiz, nome);
-            }
+            raiz = insertNode(raiz, nome);
+            printf("\nRaiz = %s", raiz->produto);
             break;
         case 2:
             printf("2\n");
@@ -67,7 +63,7 @@ int main()
             break;
             
         case 6:
-            imprime(raiz, 1);   
+            printTree(raiz);   
             break;
         case 7:
             printf("Exit...\n");

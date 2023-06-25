@@ -25,4 +25,8 @@ Node* busca(Node*, char*);
 
 Node* insertNode(Node*, char*);
 
+void printTree(Node* root);
+
+Node* createNode(char*, Cor);
+
 #endif
