@@ -85,10 +85,11 @@ Node* rotateRight(Node* node) {
 
 Node* insertNode(Node* raiz, char* produto) {
     if (raiz == NULL)
-        return createNode(produto, RED);
+        return createNode(produto, BLACK);
 
     // Inserção do nó seguindo as regras da árvore Red-Black
     int tam = strcmp(produto, raiz->produto);
+    printf("\n%d\n", tam);
     if (tam < 0) {
         raiz->esq = insertNode(raiz->esq, produto);
     } else if (tam > 0) {

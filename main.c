@@ -29,7 +29,6 @@ int main()
         switch (resp)
         {
         case 1:
-            Node* aux = NULL;
             printf("Digite o nome do produto: ");
             scanf("%s", nome);
             printf("Digite a quantidade: ");
