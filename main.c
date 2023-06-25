@@ -16,10 +16,8 @@ void menu(){
 
 int main()
 {
-    Node* raiz = criar_no("teste4");
-    raiz->esq = criar_no("teste2");
-    raiz->dir = criar_no("teste5");
-    raiz->dir->dir = criar_no("teste6");
+    Node* raiz = NULL;
+    char produto[200];
     int resp;
     do
     {   menu();
@@ -28,13 +26,14 @@ int main()
         switch (resp)
         {
         case 1:
-            printf("1\n");
+            printf("Informe o produto que deseja cadastrar: \n>> ");
+            scanf("%s", produto);
+            insert_no(&raiz, produto);
             break;
         case 2:
             printf("2\n");
             break;
         case 3:
-            char produto[200];
             int qtd_produto;
             fflush(stdin);
             printf("Informe o produto e a quantidade que deseja atualizar: \n>> ");

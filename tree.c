@@ -4,6 +4,7 @@
 #include "string.h"
 
 
+
 Node* criar_no(char* produto)
 {
     Node* no = malloc(sizeof(Node));
@@ -15,13 +16,31 @@ Node* criar_no(char* produto)
     return no;
 }
 
+
+void insert_no(Node** raiz, char* produto)
+{
+    if (*raiz == NULL)
+    {
+        *raiz = criar_no(produto);
+        (*raiz)->cor = RED;
+        return;
+    }
+    int tam = strcmp((*raiz)->produto, produto);
+    if (tam < 0) {return insert_no(&(*raiz)->esq, produto);}
+    else if (tam > 0) {return insert_no(&(*raiz)->dir, produto);}
+    else if (tam == 0) 
+    {
+        printf("O produto já está cadastrado.\n");
+    }
+}
+
 void imprime(Node* raiz, int b)
 {
     if (raiz)
     {
         imprime(raiz->dir, b+1);
         for (int i = 0; i < b; i++) printf("      ");
-        printf("%s\n", raiz->produto);
+        raiz->cor == RED ? printf("RED\n") : printf("BLACK\n");
         imprime(raiz->esq, b+1);
     }
 }
@@ -43,3 +62,4 @@ Node* busca(Node* raiz, char* produto)
     }
     
 }
+

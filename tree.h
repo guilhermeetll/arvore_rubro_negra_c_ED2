@@ -17,6 +17,11 @@ typedef struct node
 }Node;
 
 
+
+void remocao(Node**, char*);
+
+void insert_no(Node**, char*);
+
 Node* criar_no(char*);
 
 void imprime(Node* , int);
