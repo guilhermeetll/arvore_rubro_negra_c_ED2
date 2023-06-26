@@ -7,6 +7,11 @@ typedef enum cor
     RED
 }Cor;
 
+typedef enum bool{
+    False,
+    True
+}Bool;
+
 typedef struct node 
 {
     char produto[300];
@@ -17,6 +22,7 @@ typedef struct node
 }Node;
 
 
+// void transfere_pai(Node***, Node*, Node*);
 
 void remocao(Node**, char*);
 
@@ -27,5 +33,7 @@ Node* criar_no(char*);
 void imprime(Node* , int);
 
 Node* busca(Node*, char*);
+
+void lista_produtos(Node*, int);
 
 #endif

@@ -16,9 +16,41 @@ Node* criar_no(char* produto)
     return no;
 }
 
+// void transfere_pai(Node*** raiz, Node* pai, Node* v)
+// {
+//     if (pai == NULL)
+//         (*raiz) = v;
+// }
+
 void remocao(Node** raiz, char* produto)
 {
+    Node* pai = NULL;
+    Node* x, y;
+    while (True)
+    {
+        if ((*raiz) == NULL)
+        if (strcmp((*raiz)->produto, produto) > 0)
+        {
+            if ((*raiz)->esq == NULL && (*raiz)->dir == NULL)
+            {
+                (*raiz) = NULL;
+                printf("%d\n", True);
+            }
+        }
+        else if (strcmp((*raiz)->produto, produto) > 0)
+        {
+            pai = *raiz;
+            *raiz = (*raiz)->esq;
+        }
+        else 
+        {
+            pai = *raiz;
+            *raiz = (*raiz)->dir;
+        }
+        break;
+    }
     
+
 }
 
 void insert_no(Node** raiz, char* produto)
@@ -44,8 +76,7 @@ void imprime(Node* raiz, int b)
     {
         imprime(raiz->dir, b+1);
         for (int i = 0; i < b; i++) printf("      ");
-        // raiz->cor == RED ? printf("RED\n") : printf("BLACK\n");
-        printf("%s\n", raiz->produto);
+        raiz->cor == RED ? printf("RED %s\n", raiz->produto) : printf("BLACK %s\n", raiz->produto);
         imprime(raiz->esq, b+1);
     }
 }
@@ -68,3 +99,13 @@ Node* busca(Node* raiz, char* produto)
     
 }
 
+void lista_produtos(Node* raiz, int resp)
+{
+    if (raiz)
+    {
+        if (raiz->qtd_produto >= 0 && resp == 4) printf("| produto: %s\n", raiz->produto);
+        else if (raiz->qtd_produto > 0 && resp == 5) printf("| produto: %s\n| quantidade: %d\n", raiz->produto, raiz->qtd_produto);
+        lista_produtos(raiz->esq, resp);
+        lista_produtos(raiz->dir, resp);
+    }
+}

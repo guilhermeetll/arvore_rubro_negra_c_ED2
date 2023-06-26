@@ -19,6 +19,22 @@ int main()
     Node* raiz = NULL;
     char produto[200];
     int resp;
+    insert_no(&raiz, "33");
+    insert_no(&raiz, "15");
+    insert_no(&raiz, "47");
+    insert_no(&raiz, "11");
+    insert_no(&raiz, "20");
+    insert_no(&raiz, "38");
+    insert_no(&raiz, "51");
+    insert_no(&raiz, "18");
+    insert_no(&raiz, "52");
+    insert_no(&raiz, "10");
+
+    raiz->esq->esq->cor = BLACK;
+    raiz->esq->dir->cor = BLACK;
+    raiz->dir->dir->cor = BLACK;
+    raiz->dir->esq->cor = BLACK;
+    raiz->cor = BLACK;
     do
     {   menu();
         printf(">> ");
@@ -29,14 +45,9 @@ int main()
             // printf("Informe o produto que deseja cadastrar: \n>> ");
             // scanf("%s", produto);
             // insert_no(&raiz, produto);
-            insert_no(&raiz, "b");
-            insert_no(&raiz, "c");
-            insert_no(&raiz, "z");
-            insert_no(&raiz, "a");
-            raiz->cor = BLACK;
             break;
         case 2:
-            printf("2\n");
+            remocao(&raiz, "52");
             break;
         case 3:
             int qtd_produto;
@@ -58,7 +69,12 @@ int main()
                     break;
                 }
             break;
-            
+        case 4:
+            lista_produtos(raiz, resp);
+            break;
+        case 5:
+            lista_produtos(raiz, resp);
+            break;
         case 6:
             imprime(raiz, 1);   
             break;
