@@ -26,9 +26,14 @@ int main()
         switch (resp)
         {
         case 1:
-            printf("Informe o produto que deseja cadastrar: \n>> ");
-            scanf("%s", produto);
-            insert_no(&raiz, produto);
+            // printf("Informe o produto que deseja cadastrar: \n>> ");
+            // scanf("%s", produto);
+            // insert_no(&raiz, produto);
+            insert_no(&raiz, "b");
+            insert_no(&raiz, "c");
+            insert_no(&raiz, "z");
+            insert_no(&raiz, "a");
+            raiz->cor = BLACK;
             break;
         case 2:
             printf("2\n");
