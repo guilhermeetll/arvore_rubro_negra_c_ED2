@@ -28,6 +28,7 @@ int main()
     insert_no(&raiz, "51");
     insert_no(&raiz, "18");
     insert_no(&raiz, "52");
+    // insert_no(&raiz, "50");
     insert_no(&raiz, "10");
 
     raiz->esq->esq->cor = BLACK;
@@ -47,7 +48,11 @@ int main()
             // insert_no(&raiz, produto);
             break;
         case 2:
-            remocao(&raiz, "52");
+            char t[2];
+            printf(">> ");
+            fflush(stdin);
+            scanf("%s", t);
+            remocao(&raiz, &raiz, t);
             break;
         case 3:
             int qtd_produto;

@@ -16,41 +16,92 @@ Node* criar_no(char* produto)
     return no;
 }
 
-// void transfere_pai(Node*** raiz, Node* pai, Node* v)
-// {
-//     if (pai == NULL)
-//         (*raiz) = v;
-// }
 
-void remocao(Node** raiz, char* produto)
+void transfere_pai(Node** raiz, Node** pai, Node** neto)
 {
-    Node* pai = NULL;
-    Node* x, y;
-    while (True)
+    printf("%s %s\n", (*pai)->produto, (*raiz)->produto);
+    if ((*raiz) == (*pai)->esq)
+        (*pai)->esq = (*neto);
+    else 
+        (*pai)->dir = (*neto);
+}
+Node* sucessor(Node** raiz)
+{
+    Node* aux = (*raiz)->dir;
+    Node* min = NULL;
+    while (aux)
     {
-        if ((*raiz) == NULL)
-        if (strcmp((*raiz)->produto, produto) > 0)
+        if (strcmp(aux->produto, "zzzz") < 0) 
         {
-            if ((*raiz)->esq == NULL && (*raiz)->dir == NULL)
-            {
-                (*raiz) = NULL;
-                printf("%d\n", True);
-            }
+            min = aux;
         }
-        else if (strcmp((*raiz)->produto, produto) > 0)
-        {
-            pai = *raiz;
-            *raiz = (*raiz)->esq;
-        }
+        aux = aux->esq;
+    }
+    return min;
+    
+}
+void remocao(Node** raiz, Node** pai, char* produto)
+{
+    if (*raiz == NULL) return;
+    if (strcmp((*raiz)->produto, produto) == 0)
+    {
+        Node *y,*x;
+        int corY = (*raiz)->cor;
+        if (!(*raiz)->esq) 
+            transfere_pai(&(*raiz), &(*pai), &(*raiz)->dir);
+        else if (!(*raiz)->dir)
+                transfere_pai(&(*raiz), &(*pai), &(*raiz)->esq);
         else 
         {
-            pai = *raiz;
-            *raiz = (*raiz)->dir;
+            y = sucessor(&(*raiz));
+            corY = y->cor;
+            transfere_pai(&(*raiz), &(*pai), &y->dir);
+            y->dir = (*raiz)->dir;
         }
-        break;
-    }
+        
+        // if (!(*raiz)->esq && !(*raiz)->dir) // caso 1, não tem filhos
+        //     *raiz = NULL;
+        
+        // else if ((*raiz)->esq || (*raiz)->dir)
+        // {
+        //     printf("%s %s\n",(*pai)->produto, (*raiz)->produto);
+        //     if ((*raiz)->esq) 
+        //     {
+        //         if (strcmp((*pai)->produto, produto) > 0)
+        //         {
+        //             Node* x = (*raiz)->esq;
+        //             (*raiz) = NULL;
+        //             (*pai)->esq  = x;
+        //         }
+        //         else
+        //         {
+        //             Node* x = (*raiz)->esq;
+        //             (*raiz) = NULL;
+        //             (*pai)->dir  = x;
+        //         }
+        //     }
+        //     else
+        //     {
+        //         if (strcmp((*pai)->produto, produto) > 0)
+        //         {
+        //             Node* x = (*raiz)->dir;
+        //             (*raiz) = NULL;
+        //             (*pai)->esq  = x;
+        //         }
+        //         else
+        //         {
+        //             Node* x = (*raiz)->dir;
+        //             (*raiz) = NULL;
+        //             (*pai)->dir  = x;
+        //         }
+        //     }
+        // }
     
-
+    }
+    else if (strcmp((*raiz)->produto, produto) > 0)
+        remocao(&(*raiz)->esq, &(*raiz), produto);
+    else if (strcmp((*raiz)->produto, produto) < 0) 
+        remocao(&(*raiz)->dir, &(*raiz), produto);
 }
 
 void insert_no(Node** raiz, char* produto)

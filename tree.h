@@ -21,10 +21,9 @@ typedef struct node
     struct node *dir;
 }Node;
 
+void transfere_pai(Node**, Node**, Node**);
 
-// void transfere_pai(Node***, Node*, Node*);
-
-void remocao(Node**, char*);
+void remocao(Node**, Node**, char*);
 
 void insert_no(Node**, char*);
 
