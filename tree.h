@@ -19,14 +19,12 @@ typedef struct node
 
 Node* criar_no(char*, int);
 
-void imprime(Node* , int);
+void imprime(Node*, int);
 
 Node* busca(Node*, char*);
 
-Node* insertNode(Node*, char*);
+Node* insert(Node*, char*);
 
-void printTree(Node* root);
-
-Node* createNode(char*, Cor);
+Node* insertRoot(Node*, char*);
 
 #endif

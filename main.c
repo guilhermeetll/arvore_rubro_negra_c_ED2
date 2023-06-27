@@ -33,7 +33,7 @@ int main()
             scanf("%s", nome);
             printf("Digite a quantidade: ");
             scanf("%d", &quantidade);
-            raiz = insertNode(raiz, nome);
+            raiz = insertRoot(raiz, nome);
             printf("\nRaiz = %s", raiz->produto);
             break;
         case 2:
@@ -62,7 +62,7 @@ int main()
             break;
             
         case 6:
-            printTree(raiz);   
+            imprime(raiz, 1);   
             break;
         case 7:
             printf("Exit...\n");
