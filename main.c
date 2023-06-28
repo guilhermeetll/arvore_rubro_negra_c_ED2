@@ -21,22 +21,22 @@ int main()
     char produto[200];
     int resp;
     insert_no(&raiz, "33");
-    insert_no(&raiz, "15");
-    insert_no(&raiz, "47");
-    insert_no(&raiz, "11");
-    insert_no(&raiz, "20");
-    insert_no(&raiz, "38");
-    insert_no(&raiz, "51");
-    insert_no(&raiz, "18");
-    insert_no(&raiz, "52");
-    // insert_no(&raiz, "50");
-    insert_no(&raiz, "10");
+    // insert_no(&raiz, "15");
+    // insert_no(&raiz, "47");
+    // insert_no(&raiz, "11");
+    // insert_no(&raiz, "20");
+    // insert_no(&raiz, "38");
+    // insert_no(&raiz, "51");
+    // insert_no(&raiz, "18");
+    // insert_no(&raiz, "49");
+    // // insert_no(&raiz, "50");
+    // insert_no(&raiz, "10");
 
-    raiz->esq->esq->cor = BLACK;
-    raiz->esq->dir->cor = BLACK;
-    raiz->dir->dir->cor = BLACK;
-    raiz->dir->esq->cor = BLACK;
-    raiz->cor = BLACK;
+    // raiz->esq->esq->cor = BLACK;
+    // raiz->esq->dir->cor = BLACK;
+    // raiz->dir->dir->cor = BLACK;
+    // raiz->dir->esq->cor = BLACK;
+    // raiz->cor = BLACK;
     do
     {   menu();
         printf(">> ");
