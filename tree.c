@@ -77,13 +77,15 @@ FPTA* returnFamilia(Node* raiz, char* produto) {
                         if (strcmp(familia->avo->dir->produto, familia->pai->produto) == 0) {
                             familia->tio = familia->avo->esq;
                         }
-                    } 
+                    }
 
                     if (familia->avo->esq != NULL) {
                         if (strcmp(familia->avo->esq->produto, familia->pai->produto) == 0) {
                             familia->tio = familia->avo->dir;
                         }
                     }
+                } else if ((familia->avo->dir == NULL) || (familia->avo->esq == NULL)) {
+                    familia->tio = NULL;
                 }
             }
             familia->filho = familia->filho->dir;
@@ -119,17 +121,60 @@ Node* insert(Node* h, char* produto) {
 Node* insertRoot(Node* root, char* produto) {
     root = insert(root, produto);
 
-    FPTA* familia = returnFamilia(root, produto);
+    FPTA* familia     = returnFamilia(root, produto);
+    FPTA* familia_pai = returnFamilia(root, familia->pai->produto);
+    Node* Bisavo      = familia_pai->avo;
     
-    while ((isRed(familia->pai) == 1) && (isRed(familia->filho) == 1)) {
-        familia->pai->cor = BLACK;
-        if (familia->avo != NULL) {
-            familia->avo->cor = RED;
-        } 
-        if (familia->tio != NULL) {
-            familia->tio->cor = BLACK;
+    printf("\nRotacao simples");
+    printf("\nFilho = %s", familia->filho->produto);
+    printf("\nPai   = %s", familia->pai->produto);
+    printf("\nTio   = %s", familia->tio->produto);
+    printf("\nAvo   = %s", familia->avo->produto);
+    printf("\nTatara= %s", Bisavo->produto);
+    if ((familia->tio == NULL) && (familia->avo != NULL)) {
+
+        // Rotacao simples
+        if (strcmp(familia->filho->produto, familia->pai->esq->produto) == 0) {
+            printf("\nRotacao simples");
+            printf("\nFilho = %s", familia->filho->produto);
+            printf("\nPai   = %s", familia->pai->produto);
+            printf("\nTio   = %s", familia->tio->produto);
+            printf("\nAvo   = %s", familia->avo->produto);
+            printf("\nTatara= %s", Bisavo->produto);
+            familia->avo->dir = criar_no(familia->avo->produto, familia->avo->qtd_produto);
+            strcpy(familia->avo->produto, familia->avo->esq->produto);
+            familia->avo->qtd_produto = familia->avo->esq->qtd_produto;
+            familia->avo->esq = familia->filho;
+            familia = returnFamilia(root, produto);
         }
-        familia = returnFamilia(root, familia->pai->produto);
+
+        // Rotacao dupla
+        if (strcmp(familia->filho->produto, familia->pai->dir->produto) == 0) {
+            printf("\nRotacao dupla");
+            printf("\nFilho = %s", familia->filho->produto);
+            printf("\nPai   = %s", familia->pai->produto);
+            printf("\nTio   = %s", familia->tio->produto);
+            printf("\nAvo   = %s", familia->avo->produto);
+            familia->avo->dir = criar_no(familia->avo->produto, familia->avo->qtd_produto);
+            strcpy(familia->avo->produto, familia->filho->produto);
+            familia->avo->qtd_produto = familia->filho->qtd_produto;
+            familia->pai->esq = NULL;
+            familia = returnFamilia(root, produto);
+        }
+        
+    } else if (familia->tio != NULL) {
+        if (familia->tio->cor == RED) {
+            while ((isRed(familia->pai) == 1) && (isRed(familia->filho) == 1)) {
+                familia->pai->cor = BLACK;
+                if (familia->avo != NULL) {
+                    familia->avo->cor = RED;
+                } 
+                if (familia->tio != NULL) {
+                    familia->tio->cor = BLACK;
+                }
+                familia = returnFamilia(root, familia->avo->produto);
+            }
+        }
     }
 
     root->cor = BLACK; // Ensure the root is always black
