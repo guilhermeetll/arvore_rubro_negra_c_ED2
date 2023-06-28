@@ -36,17 +36,22 @@ FPTA* returnFamilia(Node* raiz, char* produto) {
                 familia->avo = familia->pai;
                 familia->pai = familia->filho;
 
+            } else {
+                familia->avo = familia->pai;
+                familia->pai = familia->filho;
+            }
+            if (familia->avo != NULL) {
                 if ((familia->avo->dir != NULL) && (familia->avo->esq != NULL)) {
 
                     if (familia->avo->dir != NULL) {
-                        if (strcmp(familia->avo->esq->produto, familia->pai->produto) == 0) {
-                            familia->tio = familia->avo->dir;
+                        if (strcmp(familia->avo->dir->produto, familia->pai->produto) == 0) {
+                            familia->tio = familia->avo->esq;
                         }
                     } 
 
                     if (familia->avo->esq != NULL) {
-                        if (strcmp(familia->avo->dir->produto, familia->pai->produto) == 0) {
-                            familia->tio = familia->avo->esq;
+                        if (strcmp(familia->avo->esq->produto, familia->pai->produto) == 0) {
+                            familia->tio = familia->avo->dir;
                         }
                     }
                 }
@@ -61,17 +66,22 @@ FPTA* returnFamilia(Node* raiz, char* produto) {
                 familia->avo = familia->pai;
                 familia->pai = familia->filho;
 
+            } else {
+                familia->avo = familia->pai;
+                familia->pai = familia->filho;
+            }
+            if (familia->avo != NULL) {
                 if ((familia->avo->dir != NULL) && (familia->avo->esq != NULL)) {
 
                     if (familia->avo->dir != NULL) {
-                        if (strcmp(familia->avo->esq->produto, familia->pai->produto) == 0) {
-                            familia->tio = familia->avo->dir;
-                        }
-                    } 
-                    
-                    if (familia->avo->esq != NULL) {
                         if (strcmp(familia->avo->dir->produto, familia->pai->produto) == 0) {
                             familia->tio = familia->avo->esq;
+                        }
+                    } 
+
+                    if (familia->avo->esq != NULL) {
+                        if (strcmp(familia->avo->esq->produto, familia->pai->produto) == 0) {
+                            familia->tio = familia->avo->dir;
                         }
                     }
                 }
@@ -80,6 +90,14 @@ FPTA* returnFamilia(Node* raiz, char* produto) {
         }
     }
     return familia;
+}
+
+int swapCor(Node* x) {
+    if (isRed(x) == 1) {
+        return BLACK;
+    } else {
+        return RED;
+    }
 }
 
 Node* insert(Node* h, char* produto) {
@@ -95,14 +113,25 @@ Node* insert(Node* h, char* produto) {
         h->dir = insert(h->dir, produto);
     }
 
-    FPTA* familia = returnFamilia(h, produto);
-
-
     return h;
 }
 
 Node* insertRoot(Node* root, char* produto) {
     root = insert(root, produto);
+
+    FPTA* familia = returnFamilia(root, produto);
+    
+    while ((isRed(familia->pai) == 1) && (isRed(familia->filho) == 1)) {
+        familia->pai->cor = BLACK;
+        if (familia->avo != NULL) {
+            familia->avo->cor = RED;
+        } 
+        if (familia->tio != NULL) {
+            familia->tio->cor = BLACK;
+        }
+        familia = returnFamilia(root, familia->pai->produto);
+    }
+
     root->cor = BLACK; // Ensure the root is always black
     return root;
 }
