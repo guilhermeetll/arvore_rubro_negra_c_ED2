@@ -32,8 +32,8 @@ int main()
         case 1:
             printf("Digite o nome do produto: ");
             scanf("%s", nome);
-            printf("Digite a quantidade: ");
-            scanf("%d", &quantidade);
+            //printf("Digite a quantidade: ");
+            //scanf("%d", &quantidade);
             raiz = insertRoot(raiz, nome);
             break;
         case 2:
