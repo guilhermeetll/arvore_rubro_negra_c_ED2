@@ -18,28 +18,68 @@ int isRed(Node* x) {
     return x->cor == RED;
 }
 
-Node* rotateLeft(Node* h) {
-    Node* x = h->dir;
-    h->dir = x->esq;
-    x->esq = h;
-    x->cor = h->cor;
-    h->cor = RED;
-    return x;
-}
+FPTA* returnFamilia(Node* raiz, char* produto) {
+    FPTA* familia = malloc(sizeof(FPTA));
+    familia->filho = raiz;
+    familia->pai = NULL;
+    familia->avo = NULL;
+    familia->tio = NULL;
 
-Node* rotateRight(Node* h) {
-    Node* x = h->esq;
-    h->esq = x->dir;
-    x->dir = h;
-    x->cor = h->cor;
-    h->cor = RED;
-    return x;
-}
+    while (familia->filho && strcmp(produto, familia->filho->produto) != 0) {
+        int cmp = strcmp(produto, familia->filho->produto);
 
-void flipColors(Node* h) {
-    h->cor = !h->cor;
-    h->esq->cor = !h->esq->cor;
-    h->dir->cor = !h->dir->cor;
+        if (cmp < 0) {
+            if (familia->pai == NULL) {
+                familia->pai = familia->filho;
+
+            } else if (familia->avo == NULL) {
+                familia->avo = familia->pai;
+                familia->pai = familia->filho;
+
+                if ((familia->avo->dir != NULL) && (familia->avo->esq != NULL)) {
+
+                    if (familia->avo->dir != NULL) {
+                        if (strcmp(familia->avo->esq->produto, familia->pai->produto) == 0) {
+                            familia->tio = familia->avo->dir;
+                        }
+                    } 
+
+                    if (familia->avo->esq != NULL) {
+                        if (strcmp(familia->avo->dir->produto, familia->pai->produto) == 0) {
+                            familia->tio = familia->avo->esq;
+                        }
+                    }
+                }
+            }
+            familia->filho = familia->filho->esq;
+
+        } else if (cmp > 0) {
+            if (familia->pai == NULL) {
+                familia->pai = familia->filho;
+
+            } else if (familia->avo == NULL) {
+                familia->avo = familia->pai;
+                familia->pai = familia->filho;
+
+                if ((familia->avo->dir != NULL) && (familia->avo->esq != NULL)) {
+
+                    if (familia->avo->dir != NULL) {
+                        if (strcmp(familia->avo->esq->produto, familia->pai->produto) == 0) {
+                            familia->tio = familia->avo->dir;
+                        }
+                    } 
+                    
+                    if (familia->avo->esq != NULL) {
+                        if (strcmp(familia->avo->dir->produto, familia->pai->produto) == 0) {
+                            familia->tio = familia->avo->esq;
+                        }
+                    }
+                }
+            }
+            familia->filho = familia->filho->dir;
+        }
+    }
+    return familia;
 }
 
 Node* insert(Node* h, char* produto) {
@@ -55,24 +95,22 @@ Node* insert(Node* h, char* produto) {
         h->dir = insert(h->dir, produto);
     }
 
-    // Fix-up to maintain Red-Black tree properties
-    if (isRed(h->dir) && !isRed(h->esq)) h = rotateLeft(h);
-    if (isRed(h->esq) && isRed(h->esq->esq)) h = rotateRight(h);
-    if (isRed(h->esq) && isRed(h->dir)) flipColors(h);
+    FPTA* familia = returnFamilia(h, produto);
+
 
     return h;
 }
 
 Node* insertRoot(Node* root, char* produto) {
     root = insert(root, produto);
-    root->cor = BLACK; // root must always be black
+    root->cor = BLACK; // Ensure the root is always black
     return root;
 }
 
 void imprime(Node* raiz, int b) {
     if (raiz) {
         imprime(raiz->dir, b + 1);
-        for (int i = 0; i < b; i++) printf("    ");
+        for (int i = 0; i < b; i++) printf("            ");
         printf("%s (%s)\n", raiz->produto, raiz->cor == RED ? "RED" : "BLACK");
         imprime(raiz->esq, b + 1);
     }

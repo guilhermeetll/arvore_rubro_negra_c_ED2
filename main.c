@@ -1,6 +1,7 @@
 #include "stdio.h"
 #include "stdlib.h"
 #include "tree.h"
+#include <string.h>
 
 void menu(){
     printf("\n***************************************************\n");
@@ -34,10 +35,15 @@ int main()
             printf("Digite a quantidade: ");
             scanf("%d", &quantidade);
             raiz = insertRoot(raiz, nome);
-            printf("\nRaiz = %s", raiz->produto);
             break;
         case 2:
-            printf("2\n");
+            printf("Digite o nome do produto: ");
+            scanf("%s", nome);
+            FPTA* familia = returnFamilia(raiz, nome);
+            printf("\nFilho = %s", familia->filho->produto);
+            printf("\nPai   = %s", familia->pai->produto);
+            printf("\nTio   = %s", familia->tio->produto);
+            printf("\nAvo   = %s", familia->avo->produto);
             break;
         case 3:
             char produto[200];
