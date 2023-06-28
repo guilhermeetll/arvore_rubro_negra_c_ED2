@@ -21,9 +21,14 @@ typedef struct node
     struct node *dir;
 }Node;
 
-void transfere_pai(Node**, Node**, Node**);
+typedef struct FPTA {
+    Node* filho; //Armazena filho que no caso é o valor que procuramos
+    Node* pai;   //Armazena Pai
+    Node* tio;   //Armazena Tio
+    Node* avo;   //Armazena Avo
+}FPTA;
 
-void remocao(Node**, Node**, char*);
+void remocao(Node**, Node**, Node**);
 
 void insert_no(Node**, char*);
 

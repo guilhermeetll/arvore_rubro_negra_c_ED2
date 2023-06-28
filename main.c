@@ -1,6 +1,7 @@
 #include "stdio.h"
 #include "stdlib.h"
 #include "tree.h"
+#include "string.h"
 
 void menu(){
     printf("***************************************************\n");
@@ -52,7 +53,30 @@ int main()
             printf(">> ");
             fflush(stdin);
             scanf("%s", t);
-            remocao(&raiz, &raiz, t);
+            Node* node = busca(raiz, t);
+            Node* percorre = raiz;
+            Node* pai = NULL;
+            while (True)
+            {
+                
+                if (raiz == NULL) break;
+                if (strcmp(percorre->produto, node->produto) == 0)
+                {   
+                    remocao(&raiz, &pai, &node);
+                    break;
+                }
+                else if (strcmp(percorre->produto, node->produto) > 0)
+                {
+                    pai = percorre;
+                    percorre = percorre->esq;
+                }
+                else if (strcmp(percorre->produto, node->produto) < 0) 
+                {
+                    pai = percorre;
+                    percorre = percorre->dir;
+                }
+                else break;
+            }
             break;
         case 3:
             int qtd_produto;
