@@ -118,66 +118,69 @@ Node* insert(Node* h, char* produto) {
     return h;
 }
 
+Node* rotateLeft(Node* h) {
+    Node* x = h->dir;
+    h->dir = x->esq;
+    x->esq = h;
+    x->cor = h->cor;
+    h->cor = RED;
+    return x;
+}
+
+Node* rotateRight(Node* h) {
+    Node* x = h->esq;
+    h->esq = x->dir;
+    x->dir = h;
+    x->cor = h->cor;
+    h->cor = RED;
+    return x;
+}
+
+void flipColors(Node* h) {
+    h->cor = swapCor(h);
+    h->esq->cor = swapCor(h->esq);
+    h->dir->cor = swapCor(h->dir);
+}
+
 Node* insertRoot(Node* root, char* produto) {
     root = insert(root, produto);
 
-    FPTA* familia     = returnFamilia(root, produto);
-    FPTA* familia_pai = returnFamilia(root, familia->pai->produto);
-    Node* Bisavo      = familia_pai->avo;
+    FPTA* familia = returnFamilia(root, produto);
     
-    printf("\nRotacao simples");
-    printf("\nFilho = %s", familia->filho->produto);
-    printf("\nPai   = %s", familia->pai->produto);
-    printf("\nTio   = %s", familia->tio->produto);
-    printf("\nAvo   = %s", familia->avo->produto);
-    printf("\nTatara= %s", Bisavo->produto);
-    if ((familia->tio == NULL) && (familia->avo != NULL)) {
-
-        // Rotacao simples
-        if (strcmp(familia->filho->produto, familia->pai->esq->produto) == 0) {
-            printf("\nRotacao simples");
-            printf("\nFilho = %s", familia->filho->produto);
-            printf("\nPai   = %s", familia->pai->produto);
-            printf("\nTio   = %s", familia->tio->produto);
-            printf("\nAvo   = %s", familia->avo->produto);
-            printf("\nTatara= %s", Bisavo->produto);
-            familia->avo->dir = criar_no(familia->avo->produto, familia->avo->qtd_produto);
-            strcpy(familia->avo->produto, familia->avo->esq->produto);
-            familia->avo->qtd_produto = familia->avo->esq->qtd_produto;
-            familia->avo->esq = familia->filho;
-            familia = returnFamilia(root, produto);
-        }
-
-        // Rotacao dupla
-        if (strcmp(familia->filho->produto, familia->pai->dir->produto) == 0) {
-            printf("\nRotacao dupla");
-            printf("\nFilho = %s", familia->filho->produto);
-            printf("\nPai   = %s", familia->pai->produto);
-            printf("\nTio   = %s", familia->tio->produto);
-            printf("\nAvo   = %s", familia->avo->produto);
-            familia->avo->dir = criar_no(familia->avo->produto, familia->avo->qtd_produto);
-            strcpy(familia->avo->produto, familia->filho->produto);
-            familia->avo->qtd_produto = familia->filho->qtd_produto;
-            familia->pai->esq = NULL;
-            familia = returnFamilia(root, produto);
-        }
+    // Rotações e recolorações para manter as propriedades da árvore Rubro-Negra
+    if (isRed(familia->pai) && familia->avo) { // Se o pai é vermelho
         
-    } else if (familia->tio != NULL) {
-        if (familia->tio->cor == RED) {
-            while ((isRed(familia->pai) == 1) && (isRed(familia->filho) == 1)) {
-                familia->pai->cor = BLACK;
-                if (familia->avo != NULL) {
-                    familia->avo->cor = RED;
-                } 
-                if (familia->tio != NULL) {
-                    familia->tio->cor = BLACK;
-                }
-                familia = returnFamilia(root, familia->avo->produto);
+        if (isRed(familia->tio)) {
+            // Caso 1: Tio é vermelho - Recoloração
+            familia->avo->cor = RED;
+            familia->pai->cor = BLACK;
+            familia->tio->cor = BLACK;
+        } else {
+            // Caso 2: Tio é preto ou NULL - Rotações
+            
+            // Verifica se é necessário realizar uma rotação à direita
+            if (familia->pai == familia->avo->esq && familia->filho == familia->pai->dir) {
+                familia->avo->esq = rotateLeft(familia->pai);
+                familia->pai = familia->avo->esq;
+            } else if (familia->pai == familia->avo->dir && familia->filho == familia->pai->esq) {
+                familia->avo->dir = rotateLeft(familia->pai);
+                familia->pai = familia->avo->dir;
             }
+
+            // Realiza rotação à esquerda ou à direita no avô
+            if (familia->pai == familia->avo->esq) {
+                rotateRight(familia->avo);
+            } else {
+                rotateLeft(familia->avo);
+            }
+            
+            // Troca as cores do pai e do avô
+            familia->pai->cor = BLACK;
+            familia->avo->cor = RED;
         }
     }
-
-    root->cor = BLACK; // Ensure the root is always black
+    
+    root->cor = BLACK; // Garante que a raiz é sempre preta
     return root;
 }
 
