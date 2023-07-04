@@ -18,9 +18,6 @@ void menu(){
 int main()
 {
     Node* raiz = NULL;
-    //raiz->esq = criar_no("teste2");
-    //raiz->dir = criar_no("teste5");
-    //raiz->dir->dir = criar_no("teste6");
     int resp, quantidade;
     char nome[100];
     do
@@ -30,27 +27,20 @@ int main()
         switch (resp)
         {
         case 1:
-            printf("Digite o nome do produto: ");
+            printf("Digite o nome do produto >> ");
             scanf("%s", nome);
-            //printf("Digite a quantidade: ");
-            //scanf("%d", &quantidade);
-            raiz = insertRoot(raiz, nome);
+            printf("Digite a quantidade >> ");
+            scanf("%d", &quantidade);
+            raiz = insertRoot(raiz, nome, quantidade);
             break;
         case 2:
-            printf("Digite o nome do produto: ");
-            scanf("%s", nome);
-            FPTA* familia = returnFamilia(raiz, nome);
-            printf("\nFilho = %s", familia->filho->produto);
-            printf("\nPai   = %s", familia->pai->produto);
-            printf("\nTio   = %s", familia->tio->produto);
-            printf("\nAvo   = %s", familia->avo->produto);
             break;
         case 3:
             char produto[200];
             int qtd_produto;
             fflush(stdin);
-            printf("Informe o produto e a quantidade que deseja atualizar: \n>> ");
-            scanf("%s%d", produto,&qtd_produto);
+            printf("Informe o produto que deseja atualizar >> ");
+            scanf("%s", produto);
                 Node* no = malloc(sizeof(Node));
                 no = busca(raiz, produto);
                 if (no == NULL){
@@ -58,13 +48,25 @@ int main()
                     break;
                 }
                 else {
+                    printf("Informe a nova quantidade >> ");
+                    scanf("%d", &qtd_produto);
                     no->qtd_produto = qtd_produto;
                     printf("*****************\n");
-                    printf("|produto: %s\n", no->produto);
-                    printf("|quantidade: %d \n", no->qtd_produto);
+                    printf("|Produto: %s\n", no->produto);
+                    printf("|Nova Quantidade: %d \n", no->qtd_produto);
                     printf("*****************\n");
                     break;
                 }
+            break;
+
+        case 4:
+            printf("Produtos: ");
+            printTreeHelper(raiz);
+            break;
+
+        case 5:
+            printf("Produtos em estoque: ");
+            printEstoque(raiz);
             break;
             
         case 6:

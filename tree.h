@@ -30,10 +30,14 @@ void imprime(Node*, int);
 
 Node* busca(Node*, char*);
 
-Node* insert(Node*, char*);
+Node* insert(Node*, char*, int);
 
-Node* insertRoot(Node*, char*);
+Node* insertRoot(Node*, char*, int);
 
-FPTA* returnFamilia(Node*, char*);
+void printTreeHelper(Node*);
+
+void printEstoque(Node*);
+
+int verificaSeExiste(Node* raiz, char* produto); 
 
 #endif

@@ -94,54 +94,34 @@ FPTA* returnFamilia(Node* raiz, char* produto) {
     return familia;
 }
 
-int swapCor(Node* x) {
-    if (isRed(x) == 1) {
-        return BLACK;
-    } else {
-        return RED;
-    }
-}
 
-Node* insert(Node* h, char* produto) {
+Node* insert(Node* h, char* produto, int quantidade) {
 
     if (h == NULL) {
-        return criar_no(produto, 100);
+        return criar_no(produto, quantidade);
     }
     
     int cmp = strcmp(produto, h->produto);
     
     if (cmp < 0) {
-        h->esq = insert(h->esq, produto);
+        h->esq = insert(h->esq, produto, quantidade);
     } else if (cmp > 0) {
-        h->dir = insert(h->dir, produto);
+        h->dir = insert(h->dir, produto, quantidade);
     }
 
     return h;
 }
 
-void rotateLeft(Node* h) {
-    Node* x = h->esq;
-    h->esq = h->esq->dir;
-    h->esq = x;
-}
+Node* insertRoot(Node* root, char* produto, int quantidade) {
 
-Node* rotateRight(Node* h) {
-    Node* x = h->esq;
-    h->esq = x->dir;
-    x->dir = h;
-    x->cor = h->cor;
-    h->cor = RED;
-    return x;
-}
+    int existe = verificaSeExiste(root, produto);
 
-void flipColors(Node* h) {
-    h->cor = swapCor(h);
-    h->esq->cor = swapCor(h->esq);
-    h->dir->cor = swapCor(h->dir);
-}
+    if (existe == 1) {
+        printf("\nProduto ja existente, adicione outro\n");
+        return root;
+    }
 
-Node* insertRoot(Node* root, char* produto) {
-    root = insert(root, produto);
+    root = insert(root, produto, quantidade);
 
     FPTA* familia = returnFamilia(root, produto);
     if (familia->avo != NULL) {
@@ -256,8 +236,8 @@ Node* insertRoot(Node* root, char* produto) {
 void imprime(Node* raiz, int b) {
     if (raiz) {
         imprime(raiz->dir, b + 1);
-        for (int i = 0; i < b; i++) printf("            ");
-        printf("%s (%s)\n", raiz->produto, raiz->cor == RED ? "RED" : "BLACK");
+        for (int i = 0; i < b; i++) printf("          ");
+        printf("(%s(%d) %s)\n", raiz->produto, raiz->qtd_produto, raiz->cor == RED ? "RED" : "BLACK");
         imprime(raiz->esq, b + 1);
     }
 }
@@ -277,5 +257,45 @@ Node* busca(Node* raiz, char* produto)
     else if (tam < 0)
     {
         busca(raiz->esq, produto);
+    }
+}
+
+int verificaSeExiste(Node* raiz, char* produto)
+{
+    if (raiz == NULL) return 0;
+    int tam = strcmp(produto, raiz->produto);
+    while(raiz != NULL) { 
+        tam = strcmp(produto, raiz->produto);
+        if (tam == 0)
+        {
+            return 1;
+        }
+        else if (tam > 0)
+        {
+            raiz = raiz->dir;
+        }
+        else if (tam < 0)
+        {
+            raiz = raiz->esq;
+        }
+    }
+    return 0;
+}
+
+void printTreeHelper(Node* h) {
+    if (h != NULL) { 
+        printTreeHelper(h->esq);
+        printf(" %s (%d) |", h->produto, h->qtd_produto);
+        printTreeHelper(h->dir);
+    }
+}
+
+void printEstoque(Node* h) {
+    if (h != NULL) { 
+        printEstoque(h->esq);
+        if (h->qtd_produto > 0) {
+            printf(" %s (%d) |", h->produto, h->qtd_produto);
+        }
+        printEstoque(h->dir);
     }
 }
