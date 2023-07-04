@@ -142,65 +142,113 @@ void flipColors(Node* h) {
 
 Node* insertRoot(Node* root, char* produto) {
     root = insert(root, produto);
-    
-    FPTA* familia = returnFamilia(root, produto);
-    
-    // Rotações e recolorações para manter as propriedades da árvore Rubro-Negra
-    while (isRed(familia->pai) && (familia->avo) && isRed(familia->filho)) { // Se o pai é vermelho
 
-        // Caso 1: Tio é vermelho - Recoloração
-        if (isRed(familia->tio)) {
-            familia->avo->cor = RED;
+    FPTA* familia = returnFamilia(root, produto);
+    if (familia->avo != NULL) {
+        FPTA* familia_old = returnFamilia(root, familia->pai->produto);
+    }
+    FPTA* familia_aux;
+    Node* bisavo;
+
+    // Rotações e recolorações para manter as propriedades da árvore Rubro-Negra
+    while (familia->avo != NULL) { // Se o pai é vermelho
+        // Caso do tio ser vermelho e pai tambem vermelho
+        if (isRed(familia->tio) && isRed(familia->pai) && isRed(familia->filho)){
             familia->pai->cor = BLACK;
             familia->tio->cor = BLACK;
+            familia->avo->cor = RED;
+            familia = returnFamilia(root, familia->avo->produto);
 
+        // Caso nao tenha mudanças
         } else {
-            // Caso 2: Tio é preto ou NULL - Rotações
-            
-            // Rotacao simples para esquerda
-            if (familia->pai == familia->avo->dir && familia->filho == familia->pai->dir) {
-                familia->avo->esq = criar_no(familia->avo->produto, 100);
-                strcpy(familia->avo->produto, familia->pai->produto);
-                familia->avo->qtd_produto = familia->pai->qtd_produto;
-                familia->avo->dir = familia->filho;
-                swapCor(familia->avo);
-
-            // Rotacao dupla para esquerda
-            } else if (familia->pai == familia->avo->dir && familia->filho == familia->pai->esq) {
-                familia->filho->dir = familia->pai;
-                familia->avo->dir = familia->filho;
-                familia->pai->esq = NULL;
-
-                familia->avo->esq = criar_no(familia->avo->produto, 100);
-                strcpy(familia->avo->produto, familia->filho->produto);
-                familia->avo->qtd_produto = familia->filho->qtd_produto;
-                familia->avo->dir = familia->pai;
-                swapCor(familia->avo);
-
-            // Rotacao dupla para direita
-            } else if (familia->pai == familia->avo->esq && familia->filho == familia->pai->dir) {
+            // Rotacao a esquerda CASO 2 Caso Dificil
+            if ((familia->avo->esq == familia->pai) && (familia->filho == familia->pai->dir) && 
+                (familia->filho->cor == RED) && (familia->pai->cor == RED)) {
+                familia->pai->dir = familia->filho->esq;
                 familia->filho->esq = familia->pai;
                 familia->avo->esq = familia->filho;
-                familia->pai->dir = NULL;
+                familia = returnFamilia(root, familia->pai->produto);
+                familia->avo->esq = familia->pai->dir;
+                familia->pai->dir = familia->avo;
+                familia->pai->cor = BLACK;
+                familia->avo->cor = RED;
+                if (root == familia->avo) {
+                    root = familia->pai;
+                }
+                familia = returnFamilia(root, familia->pai->produto);
 
-                familia->avo->dir = criar_no(familia->avo->produto, 100);
-                strcpy(familia->avo->produto, familia->filho->produto);
-                familia->avo->qtd_produto = familia->filho->qtd_produto;
-                familia->avo->esq = familia->pai;
-                swapCor(familia->avo);
+            // Rotacao a direita CASO 2 Caso dificil
+            } else if ((familia->avo->dir == familia->pai) && (familia->filho == familia->pai->esq) && 
+                (familia->filho->cor == RED) && (familia->pai->cor == RED)) {
+                familia->pai->esq = familia->filho->dir;
+                familia->filho->dir = familia->pai;
+                familia->avo->dir = familia->filho;
+                familia = returnFamilia(root, familia->pai->produto);
+                familia->avo->dir = familia->pai->esq;
+                familia->pai->esq = familia->avo;
+                familia->pai->cor = BLACK;
+                familia->avo->cor = RED;
+                if (root == familia->avo) {
+                    root = familia->pai;
+                }
+                familia = returnFamilia(root, familia->pai->produto);
 
-            // Rotacao simples para direita
-            } else if (familia->pai == familia->avo->esq && familia->filho == familia->pai->esq) {
-                familia->avo->dir = criar_no(familia->avo->produto, 100);
-                strcpy(familia->avo->produto, familia->pai->produto);
-                familia->avo->qtd_produto = familia->pai->qtd_produto;
-                familia->avo->esq = familia->filho;
-                swapCor(familia->avo);
+            // Rotacao a direita CASO 1 Caso Facil
+            } else if ((familia->avo->esq == familia->pai) && (familia->filho == familia->pai->esq) && 
+                (familia->filho->cor == RED) && (familia->pai->cor == RED)) {
+                familia_aux = returnFamilia(root, familia->pai->produto);
+                bisavo = familia_aux->avo;
+                if (bisavo != NULL) {
+                    if (bisavo->esq == familia->avo) {
+                        bisavo->esq = familia->pai;
+                    } else {
+                        bisavo->dir = familia->pai;
+                    }
+                    familia->avo->esq = familia->pai->dir;
+                    familia->pai->dir = familia->avo;
+                } else {
+                    root = familia->pai;
+                    familia->avo->esq = familia->pai->dir;
+                    familia->pai->dir = familia->avo;
+                }
+                familia->pai->cor = BLACK;
+                familia->avo->cor = RED;
+                if (root == familia->avo) {
+                    root = familia->pai;
+                }
+                familia = returnFamilia(root, familia->pai->produto);
+
+            // Esse eu nao sei se esta certo
+            } else if ((familia->avo->dir == familia->pai) && (familia->filho == familia->pai->dir) && 
+                (familia->filho->cor == RED) && (familia->pai->cor == RED)) {
+                familia_aux = returnFamilia(root, familia->pai->produto);
+                bisavo = familia_aux->avo;
+                if (bisavo != NULL) {
+                    if (bisavo->dir == familia->avo) {
+                        bisavo->dir = familia->pai;
+                    } else {
+                        bisavo->esq = familia->pai;
+                    }
+                    familia->avo->dir = familia->pai->esq;
+                    familia->pai->esq = familia->avo;
+                } else {
+                    root = familia->pai;
+                    familia->avo->dir = familia->pai->esq;
+                    familia->pai->esq = familia->avo;
+                }
+                familia->pai->cor = BLACK;
+                familia->avo->cor = RED;
+                if (root == familia->avo) {
+                    root = familia->pai;
+                }
+                familia = returnFamilia(root, familia->pai->produto);
+
+            } else {
+                familia = returnFamilia(root, familia->pai->produto);
             }
         }
-        familia = returnFamilia(familia->avo, produto);
     }
-    
+
     root->cor = BLACK; // Garante que a raiz é sempre preta
     return root;
 }
