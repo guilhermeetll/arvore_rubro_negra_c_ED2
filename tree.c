@@ -19,90 +19,130 @@ Node* criar_no(char* produto)
 
 
 
-Node* find_sucessor(Node** rbt)
+Node* find_sucessor(Node* rbt)
 {
     if (!rbt) return NULL;
-    if (!(*rbt)->esq) return (*rbt);
-    else find_sucessor(&(*rbt)->esq);
+    if (!rbt->esq) return rbt;
+    else find_sucessor(rbt->esq);
 }
 
-Node* get_pai(Node** raiz, Node** no)
+Node* get_pai(Node** raiz, Node* no)
 {
     Node* pai = (*raiz);
     while (pai)
     {
-        if (strcmp(pai->produto, (*no)->produto) == 0)
+        if (strcmp(pai->produto, no->produto) == 0)
             return NULL;
-        else if (pai->dir && strcmp(pai->dir->produto, (*no)->produto) == 0)
+        else if (pai->dir && strcmp(pai->dir->produto, no->produto) == 0)
                 return pai;
-        else if (pai->esq && strcmp(pai->esq->produto, (*no)->produto) == 0)
+        else if (pai->esq && strcmp(pai->esq->produto, no->produto) == 0)
                 return pai;
             
-        else if (strcmp(pai->produto, (*no)->produto) > 0)
+        else if (strcmp(pai->produto, no->produto) > 0)
             pai = pai->esq;
         else pai = pai->dir;
     }
 }
 
-void transfere_pai(Node** raiz, Node** pai, Node** neto)
+void transfere_pai(Node** raiz, Node* rbt, Node* target)
 {
-    Node* filho = get_pai(&(*raiz), &(*neto));
-    filho = get_pai(&(*raiz), &filho);
-    if (!(*pai)) (*raiz) = (*neto);
-    else if ((*pai)->esq && strcmp(filho->produto, (*pai)->esq->produto) == 0)
-    {
-        (*pai)->esq = (*neto);
-    }
-    else 
-        (*pai)->dir = (*neto);
+    Node* paiRBT = get_pai(raiz, rbt);
+    if (!paiRBT)
+        (*raiz) = target;
+    else if (strcmp(paiRBT->esq->produto, rbt->produto) == 0)
+        paiRBT->esq = target;
+    else paiRBT->dir = target;
+    
 }
-void remocao(Node** raiz, Node** pai, Node** delete)
-{   
-    if (!(*raiz) || !delete) return;
-    Node* deleted = (*delete);
-    Node* auxSucessor;
-    Node* sucessor = (*delete);
-    Cor originalCor = sucessor->cor;
 
-    if (!(*delete)->esq && !(*delete)->esq) 
-    {
-        if (strcmp((*raiz)->produto, (*delete)->produto) == 0) 
-        {
-            (*raiz) = NULL;
-        }
-        else if ((*pai)->esq && strcmp((*pai)->esq->produto, (*delete)->produto) == 0) (*pai)->esq = NULL;
-        else (*pai)->dir = NULL;
-    }
-    else if (!(*delete)->esq)
-    {
-        auxSucessor = (*delete)->dir;
-        transfere_pai(&(*raiz), &(*pai), &(*delete)->dir);
-    }
-    else if (!(*delete)->dir)
-    {  
-        auxSucessor = (*delete)->esq;
-        transfere_pai(&(*raiz), &(*pai), &(*delete)->esq);
-    }
+void left(Node** raiz, Node* pivo)
+{
+    Node* y = pivo->esq;
+    Node* paiPivo = get_pai(&(*raiz), pivo);
+    pivo->esq = y->dir;
+    if (pivo->esq)
+        paiPivo->esq = pivo;
+    if (!paiPivo)
+        (*raiz) = y;
+    else if (strcmp(pivo->produto, paiPivo->esq->produto))
+        paiPivo->esq = y;
     else 
+        paiPivo->dir = y;
+    y->dir = pivo;
+    paiPivo = y;
+}
+
+void right(Node** raiz, Node* pivo)
+{
+    Node* y = pivo->dir;
+    Node* paiPivo = get_pai(&(*raiz), pivo);
+    pivo->dir = y->esq;
+    if (pivo->dir)
+        paiPivo->dir = pivo;
+    if (!paiPivo)
+        (*raiz) = y;
+    else if (strcmp(pivo->produto, paiPivo->esq->produto))
+        paiPivo->esq = y;
+    else 
+        paiPivo->dir = y;
+    y->esq = pivo;
+    paiPivo = y;
+}
+
+// void deleteFixup(Node** raiz, Node* rbt)
+// {
+//     Node* w;
+
+//     while (strcmp((*raiz)->produto, rbt->produto) != 0 && rbt->cor == BLACK)
+//     {
+//         Node* paiRBT = get_pai(&(*raiz), rbt);
+//         if (strcmp(paiRBT->esq->produto, rbt->produto) == 0)
+//         {
+            
+//         }
+//     }
+    
+// }
+
+void remocao(Node** raiz, Node* delete)
+{
+    if (!(*raiz) || !delete) return;
+    Node* auxSucessor = delete;
+    Node* sucessor = delete;
+    Cor originalCor = sucessor->cor;
+    if (!delete->esq) 
     {
-        sucessor = find_sucessor(&(*delete)->dir);
+        auxSucessor = delete->dir;
+        transfere_pai(&(*raiz), delete, delete->dir);
+    }
+    else if (!delete->dir)
+    {
+        auxSucessor = delete->esq;
+        transfere_pai(&(*raiz), delete, delete->esq);
+    }
+    else
+    {
+        sucessor = find_sucessor(delete->dir);
         originalCor = sucessor->cor;
         auxSucessor = sucessor->dir;
-
-        if (strcmp((*delete)->dir->produto, sucessor->produto) == 0)
-            (*pai)->dir = sucessor;
-        else 
-        {   
-            Node* paiSucessor = get_pai(&(*raiz), &sucessor);
-            transfere_pai(&(*raiz), &(*pai), &sucessor);
-            sucessor->dir = (*delete)->dir;
-            if (paiSucessor->dir && strcmp(paiSucessor->dir->produto, sucessor->produto) == 0) paiSucessor->dir = NULL;
-            else paiSucessor->esq = NULL;
+        Node* paiSucessor = get_pai(&(*raiz), sucessor);
+        if (strcmp(paiSucessor->produto, delete->produto) == 0)
+        {
+            Node* paiAux = sucessor;
         }
-        //transfere_pai(&(*raiz), &(*pai), &sucessor);
-        sucessor->esq = (*delete)->esq;
-        sucessor->cor = (*delete)->cor;
+        else
+        {
+            transfere_pai(&(*raiz), sucessor, sucessor->dir);
+            sucessor->dir = delete->dir;
+        }
+        transfere_pai(&(*raiz), delete, sucessor);
+        sucessor->esq = delete->esq;
+        sucessor->cor = delete->cor;
     }
+    // if (originalCor == BLACK)
+    // {
+    //     deleteFixup(&(*raiz), auxSucessor);
+    // }
 }
 
 void insert_no(Node** raiz, char* produto)

@@ -29,7 +29,7 @@ int main()
     insert_no(&raiz, "51");
     insert_no(&raiz, "18");
     insert_no(&raiz, "49");
-    // insert_no(&raiz, "50");
+    insert_no(&raiz, "60");
     insert_no(&raiz, "10");
 
     raiz->esq->esq->cor = BLACK;
@@ -62,7 +62,7 @@ int main()
                 if (raiz == NULL) break;
                 if (strcmp(percorre->produto, node->produto) == 0)
                 {   
-                    remocao(&raiz, &pai, &node);
+                    remocao(&raiz, node);
                     break;
                 }
                 else if (strcmp(percorre->produto, node->produto) > 0)
