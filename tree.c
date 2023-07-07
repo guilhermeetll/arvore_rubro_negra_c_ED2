@@ -102,55 +102,85 @@ void transfere_pai(Node** raiz, Node* rbt, Node* target)
 
 void left(Node** raiz, Node* pivo)
 {
-    Node* y = pivo->dir;
-    Node* paiPivo = get_pai(&(*raiz), pivo);
+    /**
+     * Realiza uma rotação para a esquerda em uma árvore binária de busca.
+     *
+     * @param raiz Um ponteiro para um ponteiro para o nó raiz da árvore.
+     * @param pivo O nó que será o pivô da rotação.
+     */
+    Node* y = pivo->dir; // Armazena o nó à direita do pivô como 'y'
+    Node* paiPivo = get_pai(&(*raiz), pivo); // Obtém o pai do pivô na árvore
 
-    pivo->dir = y->esq;
-    if (pivo->dir != EXTERNAL)
+    pivo->dir = y->esq; // O filho à esquerda de 'y' se torna o filho à direita do pivô
+
+    // Atualiza o pai do pivô para apontar para o pivô atualizado
+    if (pivo->dir != EXTERNAL) // Se o filho à direita do pivô não for um nó externo
         paiPivo->dir = pivo;
-    if (paiPivo == EXTERNAL)
-        (*raiz) = y;
-    else if (strcmp(pivo->produto, paiPivo->esq->produto) == 0)
-        paiPivo->esq = y;
+
+    if (paiPivo == EXTERNAL) // Se o pai do pivô for um nó externo, significa que o pivô era a raiz
+        (*raiz) = y; // Atualiza a raiz para apontar para 'y'
+    else if (strcmp(pivo->produto, paiPivo->esq->produto) == 0) // Se o pivô for filho esquerdo do pai
+        paiPivo->esq = y; // Atualiza o filho esquerdo do pai para apontar para 'y'
     else 
-        paiPivo->dir = y;
-    y->esq = pivo;
+        paiPivo->dir = y; // Caso contrário, atualiza o filho direito do pai para apontar para 'y'
+
+    y->esq = pivo; // O pivô se torna filho esquerdo de 'y'
 }
 
 void right(Node** raiz, Node* pivo)
 {
-    Node* y = pivo->esq;
-    Node* paiPivo = get_pai(&(*raiz), pivo);
+    /**
+     * Realiza uma rotação para a direita em uma árvore binária de busca.
+     *
+     * @param raiz Um ponteiro para um ponteiro para o nó raiz da árvore.
+     * @param pivo O nó que será o pivô da rotação.
+     */
+    Node* y = pivo->esq; // Armazena o nó à esquerda do pivô como 'y'
+    Node* paiPivo = get_pai(&(*raiz), pivo); // Obtém o pai do pivô na árvore
 
-    pivo->esq = y->dir;
-    if (pivo->dir != EXTERNAL)
+    pivo->esq = y->dir; // O filho à direita de 'y' se torna o filho à esquerda do pivô
+
+    // Atualiza o pai do pivô para apontar para o pivô atualizado
+    if (pivo->dir != EXTERNAL) // Se o filho à direita do pivô não for um nó externo
         paiPivo->esq = pivo;
-    if (paiPivo == EXTERNAL)
-        (*raiz) = y;
-    else if (strcmp(pivo->produto, paiPivo->esq->produto) == 0)
-        paiPivo->esq = y;
+
+    if (paiPivo == EXTERNAL) // Se o pai do pivô for um nó externo, significa que o pivô era a raiz
+        (*raiz) = y; // Atualiza a raiz para apontar para 'y'
+    else if (strcmp(pivo->produto, paiPivo->esq->produto) == 0) // Se o pivô for filho esquerdo do pai
+        paiPivo->esq = y; // Atualiza o filho esquerdo do pai para apontar para 'y'
     else 
-        paiPivo->dir = y;
-    y->dir = pivo;
+        paiPivo->dir = y; // Caso contrário, atualiza o filho direito do pai para apontar para 'y'
+
+    y->dir = pivo; // O pivô se torna filho direito de 'y'
 }
 
 void deleteFixup(Node** raiz, Node* rbt, Node* pai)
 {
+    /**
+     * Realiza a correção após a remoção de um nó em uma árvore rubro-negra.
+     *
+     * @param raiz Um ponteiro para um ponteiro para o nó raiz da árvore.
+     * @param rbt O nó que foi removido da árvore.
+     * @param pai O pai do nó removido.
+     */
     Node* siblingRbt;
-    // O loop se repete ate que a cor preta extra deixa de existir.
+
+    // O loop se repete até que a cor preta extra deixe de existir.
     while (rbt != (*raiz) && rbt->cor == BLACK)
     {
-        // Caso rbt seja filho a esquerda de seu pai.
+        // Caso rbt seja filho à esquerda de seu pai.
         if (rbt == pai->esq){
             siblingRbt = pai->dir;
-            // Caso 1: O irmao de rbt eh vermelho.
+
+            // Caso 1: O irmão de rbt é vermelho.
             if (siblingRbt->cor == RED){
                 siblingRbt->cor = BLACK;
                 pai->cor = RED;
                 left(raiz, pai);
                 siblingRbt = pai->dir;
             }
-            // Caso 2: O irmao de rbt eh negro e os 2 filhos deste irmao tambem sao negros.
+
+            // Caso 2: O irmão de rbt é negro e os dois filhos deste irmão também são negros.
             if (siblingRbt->esq->cor == BLACK && siblingRbt->dir->cor == BLACK){
                 siblingRbt->cor = RED;
                 rbt = pai;
@@ -158,61 +188,66 @@ void deleteFixup(Node** raiz, Node* rbt, Node* pai)
 
             else{
                  if (siblingRbt->dir->cor == BLACK){
-                    // Caso 3: O irmao de rbt eh negro,
-                    // e este irmao tem filho a esquerda vermelho e filho a direita negro.
+                    // Caso 3: O irmão de rbt é negro
+                    // e este irmão tem filho à esquerda vermelho e filho à direita negro.
                     siblingRbt->esq->cor = BLACK;
                     siblingRbt->cor = RED;
                     right(raiz, siblingRbt);
                     siblingRbt = pai->dir;
                 }
-                // Caso 4: O irmao de rbt eh negro,
-                // e este irmao tem filho a direita vermelho.
+
+                // Caso 4: O irmão de rbt é negro
+                // e este irmão tem filho à direita vermelho.
                 siblingRbt->cor = pai->cor;
                 pai->cor = BLACK;
                 siblingRbt->dir->cor = BLACK;
                 left(raiz, pai);
+
                 // Para sair do loop.
                 rbt = (*raiz);
             }
         }
-        // Caso rbt seja filho a direita de seu pai.
+        // Caso rbt seja filho à direita de seu pai.
         else {
             siblingRbt = pai->esq;
-            // Caso 1: O irmao de rbt eh vermelho.
-            if (siblingRbt->cor == RED){
 
+            // Caso 1: O irmão de rbt é vermelho.
+            if (siblingRbt->cor == RED){
                 siblingRbt->cor = BLACK;
                 pai->cor = RED;
                 right(raiz, pai);
                 siblingRbt = pai->esq;
             }
-            // Caso 2: O irmao de rbt eh negro e os 2 filhos deste irmao tambem sao negros.
+
+            // Caso 2: O irmão de rbt é negro e os dois filhos deste irmão também são negros.
             if (siblingRbt->esq->cor == BLACK && siblingRbt->dir->cor == BLACK){
                 siblingRbt->cor = RED;
                 rbt = pai;
             }
 
             else{
-                // Caso 3: O irmao de rbt eh negro,
-                // e este irmao tem filho a direita vermelho e filho a esquerda negro.
-                 if (siblingRbt->esq->cor == BLACK){
-  
+                // Caso 3: O irmão de rbt é negro
+                // e este irmão tem filho à direita vermelho e filho à esquerda negro.
+                if (siblingRbt->esq->cor == BLACK){
                     siblingRbt->dir->cor = BLACK;
                     siblingRbt->cor = RED;
                     left(raiz, siblingRbt);
                     siblingRbt = pai->esq;
                 }
-                // Caso 4: O irmao de rbt eh negro,
-                // e este irmao tem filho a esquerda vermelho.
+
+                // Caso 4: O irmão de rbt é negro
+                // e este irmão tem filho à esquerda vermelho.
                 siblingRbt->cor = pai->cor;
                 pai->cor = BLACK;
                 siblingRbt->esq->cor = BLACK;
                 right(raiz, pai);
+
                 // Para sair do loop.
                 rbt = (*raiz);
             }
         }
     }
+
     rbt->cor = BLACK;
 }
 
