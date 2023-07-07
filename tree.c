@@ -78,7 +78,19 @@ Node* get_pai(Node** raiz, Node* no)
 }
 
 void transfere_pai(Node** raiz, Node* rbt, Node* target)
-{
+{   
+    /*
+        Função responsável por transferir a referência de
+        um node para pai para o filho do nó deletado.
+
+        Args: 
+            raiz (Node): raiz da árvore.
+            rbt (Node): nó deletado.
+            target (Node): filho do nó deletado.
+        
+        Returns:
+            sem retornos.
+    */
     Node* paiRBT = get_pai(raiz, rbt);
     if (paiRBT == EXTERNAL)
         (*raiz) = target;
