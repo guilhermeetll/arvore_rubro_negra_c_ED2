@@ -502,6 +502,7 @@ void printEstoque(Node* h) {
         }
         printEstoque(h->dir);
     }
+    printf("\n");
 }
 
 void printTreeHelper(Node* h) {

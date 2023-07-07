@@ -38,10 +38,15 @@ int main()
             break;
         case 2:
             char t[2];
-            printf(">> ");
+            printf("Informe o produto que deseja remover: ");
             fflush(stdin);
             scanf("%s", t);
             Node* node = busca(raiz, t);
+            if (!node)
+            {
+                printf("O produto não existe!\n");
+                break;
+            }
             Node* percorre = raiz;
             Node* pai = NULL;
             while (True)
