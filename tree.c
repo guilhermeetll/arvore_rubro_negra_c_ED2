@@ -253,11 +253,19 @@ void deleteFixup(Node** raiz, Node* rbt, Node* pai)
 
 void remocao(Node** raiz, Node* delete)
 {
+    /**
+     * Realiza a remoção de um nó em uma árvore binária de busca rubro-negra.
+     *
+     * @param raiz Um ponteiro para um ponteiro para o nó raiz da árvore.
+     * @param delete O nó que será removido da árvore.
+     */
     if (!(*raiz) || !delete) return;
+
     Node* auxSucessor;
     Node* sucessor = delete;
     Cor originalCor = sucessor->cor;
     Node* pai;
+
     if (delete->esq == EXTERNAL) 
     {
         pai = get_pai(&(*raiz), delete);
@@ -277,7 +285,8 @@ void remocao(Node** raiz, Node* delete)
         auxSucessor = sucessor->dir;
         Node* paiSucessor = get_pai(&(*raiz), sucessor);
         pai = paiSucessor;
-        if (paiSucessor != EXTERNAL && (paiSucessor->produto, delete->produto) == 0)
+
+        if (paiSucessor != EXTERNAL && strcmp(paiSucessor->produto, delete->produto) == 0)
         {
             pai = sucessor;
         }
@@ -286,10 +295,12 @@ void remocao(Node** raiz, Node* delete)
             transfere_pai(&(*raiz), sucessor, sucessor->dir);
             sucessor->dir = delete->dir;
         }
+
         transfere_pai(&(*raiz), delete, sucessor);
         sucessor->esq = delete->esq;
         sucessor->cor = delete->cor;
     }
+
     if (originalCor == BLACK)
     {
         deleteFixup(raiz, auxSucessor, pai);
@@ -534,50 +545,88 @@ Node* insertRoot(Node* root, char* produto, int quantidade) {
 
 void imprime(Node* raiz, int b)
 {
+    /**
+     * Imprime os nós de uma árvore binária de busca rubro-negra.
+     *
+     * @param raiz O nó raiz da árvore.
+     * @param b O nível de recuo para formatar a impressão.
+     */
     if (raiz != EXTERNAL)
     {
+        // Imprime os nós da subárvore direita primeiro (percurso em ordem decrescente)
         imprime(raiz->dir, b+1);
-        for (int i = 0; i < b; i++) printf("      ");
+
+        // Adiciona recuo para formatar a impressão
+        for (int i = 0; i < b; i++)
+            printf("      ");
+
+        // Imprime o nó atual, exibindo sua cor e produto
         raiz->cor == RED ? printf("RED %s\n", raiz->produto) : printf("BLACK %s\n", raiz->produto);
+
+        // Imprime os nós da subárvore esquerda
         imprime(raiz->esq, b+1);
     }
 }
 
 Node* busca(Node* raiz, char* produto)
 {
+    /**
+     * Realiza uma busca por um nó em uma árvore binária de busca rubro-negra.
+     *
+     * @param raiz O nó raiz da árvore.
+     * @param produto O produto a ser buscado.
+     * @return Um ponteiro para o nó encontrado ou NULL se não for encontrado.
+     */
     if (raiz == EXTERNAL) return NULL;
+
     int tam = strcmp(produto, raiz->produto);
+
     if (tam == 0)
     {
-        return raiz;
+        return raiz; // Retorna o nó encontrado
     }
     else if (tam > 0)
     {
-        busca(raiz->dir, produto);
+        return busca(raiz->dir, produto); // Realiza a busca na subárvore direita
     }
     else if (tam < 0)
     {
-        busca(raiz->esq, produto);
+        return busca(raiz->esq, produto); // Realiza a busca na subárvore esquerda
     }
     
+    // Caso nenhuma das condições anteriores seja satisfeita, retorna NULL (nó não encontrado)
+    return NULL;
 }
 
 void printEstoque(Node* h) {
+    /**
+     * Imprime o estoque de produtos representado por uma árvore binária.
+     *
+     * @param h O nó raiz da árvore.
+     */
     if (h != NULL) { 
-        printEstoque(h->esq);
+        printEstoque(h->esq); // Imprime os nós da subárvore esquerda (percurso em ordem)
+        
         if (h->qtd_produto > 0) {
-            printf(" %s (%d) |", h->produto, h->qtd_produto);
+            printf(" %s (%d) |", h->produto, h->qtd_produto); // Imprime o produto e a quantidade
         }
-        printEstoque(h->dir);
+        
+        printEstoque(h->dir); // Imprime os nós da subárvore direita
     }
-    printf("\n");
+    
+    printf("\n"); // Imprime uma nova linha no final para melhorar a formatação
 }
 
 void printTreeHelper(Node* h) {
+    /**
+     * Função auxiliar para imprimir uma árvore binária representando o estoque de produtos.
+     *
+     * @param h O nó raiz da árvore.
+     */
     if (h != EXTERNAL) { 
-        printTreeHelper(h->esq);
-        printf(" %s (%d) |", h->produto, h->qtd_produto);
-        printTreeHelper(h->dir);
+        printTreeHelper(h->esq); // Imprime os nós da subárvore esquerda (percurso em ordem)
+        printf(" %s (%d) |", h->produto, h->qtd_produto); // Imprime o produto e a quantidade
+        printTreeHelper(h->dir); // Imprime os nós da subárvore direita
     }
-    printf("\n");
+    printf("\n"); // Imprime uma nova linha no final para melhorar a formatação
 }
