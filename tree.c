@@ -26,7 +26,8 @@ Node* criar_no(char* produto, int quantidade) {
     return no;
 }
 
-int isRed(Node* x) {
+int isRed(Node* x) 
+{
     if (x == NULL) return 0;
     return x->cor == RED;
 }

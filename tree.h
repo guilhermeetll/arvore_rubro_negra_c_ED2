@@ -11,7 +11,8 @@ typedef enum cor
     RED
 }Cor;
 
-typedef enum bool{
+typedef enum bool
+{
     False,
     True
 }Bool;
@@ -25,7 +26,8 @@ typedef struct node
     struct node *dir;
 }Node;
 
-typedef struct FPTA {
+typedef struct FPTA 
+{
     Node* filho; //Armazena filho que no caso é o valor que procuramos
     Node* pai;   //Armazena Pai
     Node* tio;   //Armazena Tio
@@ -34,6 +36,20 @@ typedef struct FPTA {
 
 extern Node* EXTERNAL;
 Node* createEXTERNAL();
+
+void deleteFixup(Node**, Node*, Node*);
+
+int isRed(Node*);
+
+Node* find_sucessor(Node*);
+
+Node* get_pai(Node**, Node*);
+
+void transfere_pai(Node**, Node*, Node*);
+
+void left(Node**, Node*);
+
+void right(Node**, Node*);
 
 void remocao(Node**, Node*);
 
