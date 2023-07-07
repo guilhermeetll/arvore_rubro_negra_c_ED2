@@ -1,6 +1,13 @@
 #ifndef TREE_H
 #define TREE_H
 
+/**
+ * Grupo 7
+ * Gabriela júlia Tavares Elias
+ * Guilherme Travaglia Largura
+ * Lucas Ferreira de Souza Santos
+*/
+
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"

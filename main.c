@@ -1,8 +1,17 @@
+/**
+ * Grupo 7
+ * Gabriela júlia Tavares Elias
+ * Guilherme Travaglia Largura
+ * Lucas Ferreira de Souza Santos
+*/
+
 // Bibliotecas necessárias para o funcionamento do programa
 #include "stdio.h"
 #include "stdlib.h"
 #include "tree.h"
 #include "string.h"
+
+
 
 // Função que exibe o menu principal para o usuário
 void menu(){
