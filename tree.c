@@ -351,20 +351,18 @@ Node* insert(Node* h, char* produto, int quantidade) {
      * @param quantidade A quantidade do produto a ser inserida.
      * @return O nó atualizado.
      */
+
     // Se o nó atual é o nó externo (ou seja, o fim da árvore), a função cria um novo nó com o produto e a quantidade especificados e retorna.
     if (h == EXTERNAL) {
         return criar_no(produto, quantidade);
     }
-
+    
     // A função então compara o produto com o produto no nó atual usando a função strcmp().
     int cmp = strcmp(produto, h->produto);
-
-    // Se o produto é menor que o produto no nó atual, a função se chama recursivamente no filho esquerdo do nó atual.
+    
     if (cmp < 0) {
         h->esq = insert(h->esq, produto, quantidade);
-    }
-    // Se o produto é maior que o produto no nó atual, a função se chama recursivamente no filho direito do nó atual.
-    else if (cmp > 0) {
+    } else if (cmp > 0) {
         h->dir = insert(h->dir, produto, quantidade);
     }
 
@@ -381,6 +379,7 @@ FPTA* returnFamilia(Node* raiz, char* produto) {
      * @param produto O produto a ser buscado na árvore.
      * @return A estrutura FPTA para o produto especificado.
      */
+
     // A função começa inicializando uma nova estrutura FPTA com a raiz da árvore como o nó filho e todos os outros nós como NULL.
     FPTA* familia = malloc(sizeof(FPTA));
     familia->filho = raiz;
@@ -390,41 +389,30 @@ FPTA* returnFamilia(Node* raiz, char* produto) {
 
     // A função então entra em um laço while que continuará até que o nó filho seja NULL ou o produto do nó filho seja igual ao produto procurado.
     while (familia->filho && strcmp(produto, familia->filho->produto) != 0) {
-
-        // A função usa a função strcmp() para comparar o produto do nó filho com o produto procurado.
         int cmp = strcmp(produto, familia->filho->produto);
 
         // Se o produto procurado é menor que o produto do nó filho, o código entra no bloco if cmp < 0.
         if (cmp < 0) {
-
-            // O código atualiza os nós na estrutura FPTA dependendo de quais nós já foram preenchidos.
-            // Se o nó pai é NULL, o nó filho é movido para o nó pai.
             if (familia->pai == NULL) {
                 familia->pai = familia->filho;
 
-            // Se o nó avô é NULL, o nó pai é movido para o nó avô e o nó filho é movido para o nó pai.
             } else if (familia->avo == NULL) {
                 familia->avo = familia->pai;
                 familia->pai = familia->filho;
 
-            // Se o nó avô e o nó pai não são NULL, o nó pai é movido para o nó avô e o nó filho é movido para o nó pai.
             } else {
                 familia->avo = familia->pai;
                 familia->pai = familia->filho;
             }
-
-            // Se o nó avô não é NULL, o código procura pelos nós irmãos do nó pai para determinar o nó tio.
             if (familia->avo != NULL) {
                 if ((familia->avo->dir != NULL) && (familia->avo->esq != NULL)) {
 
-                    // O código verifica se o nó direito do nó avô é o nó pai. Se for, o nó tio é definido como o nó esquerdo do nó avô.
                     if (familia->avo->dir != NULL) {
                         if (strcmp(familia->avo->dir->produto, familia->pai->produto) == 0) {
                             familia->tio = familia->avo->esq;
                         }
-                    }
+                    } 
 
-                    // O código verifica se o nó esquerdo do nó avô é o nó pai. Se for, o nó tio é definido como o nó direito do nó avô.
                     if (familia->avo->esq != NULL) {
                         if (strcmp(familia->avo->esq->produto, familia->pai->produto) == 0) {
                             familia->tio = familia->avo->dir;
@@ -432,58 +420,44 @@ FPTA* returnFamilia(Node* raiz, char* produto) {
                     }
                 }
             }
-
             // O código então move para o filho esquerdo do nó atual para continuar a busca.
             familia->filho = familia->filho->esq;
 
         // Se o produto procurado é maior que o produto do nó filho, o código entra no bloco else if cmp > 0.
         } else if (cmp > 0) {
-
-            // O código atualiza os nós na estrutura FPTA dependendo de quais nós já foram preenchidos.
-            // Se o nó pai é NULL, o nó filho é movido para o nó pai.
             if (familia->pai == NULL) {
                 familia->pai = familia->filho;
 
-            // Se o nó avô é NULL, o nó pai é movido para o nó avô e o nó filho é movido para o nó pai.
             } else if (familia->avo == NULL) {
                 familia->avo = familia->pai;
                 familia->pai = familia->filho;
 
-            // Se o nó avô e o nó pai não são NULL, o nó pai é movido para o nó avô e o nó filho é movido para o nó pai.
             } else {
                 familia->avo = familia->pai;
                 familia->pai = familia->filho;
             }
-
-            // Se o nó avô não é NULL, o código procura pelos nós irmãos do nó pai para determinar o nó tio.
             if (familia->avo != NULL) {
                 if ((familia->avo->dir != NULL) && (familia->avo->esq != NULL)) {
 
-                    // O código verifica se o nó direito do nó avô é o nó pai. Se for, o nó tio é definido como o nó esquerdo do nó avô.
                     if (familia->avo->dir != NULL) {
                         if (strcmp(familia->avo->dir->produto, familia->pai->produto) == 0) {
                             familia->tio = familia->avo->esq;
                         }
                     }
 
-                    // O código verifica se o nó esquerdo do nó avô é o nó pai. Se for, o nó tio é definido como o nó direito do nó avô.
                     if (familia->avo->esq != NULL) {
                         if (strcmp(familia->avo->esq->produto, familia->pai->produto) == 0) {
                             familia->tio = familia->avo->dir;
                         }
                     }
                 } else if ((familia->avo->dir == NULL) || (familia->avo->esq == NULL)) {
-                    // Se um dos filhos (esquerdo ou direito) do nó avô é NULL, o nó tio é definido como NULL.
                     familia->tio = NULL;
                 }
             }
-
             // O código então move para o filho direito do nó atual para continuar a busca.
             familia->filho = familia->filho->dir;
         }
     }
-
-    // A função retorna a estrutura FPTA preenchida.
     return familia;
 }
 
@@ -528,6 +502,8 @@ int verificaSeExiste(Node* raiz, char* produto)
     // Se o produto não for encontrado após verificar todos os nós, retorna 0 (falso).
     return 0;
 }
+
+
 Node* insertRoot(Node* root, char* produto, int quantidade) {
     /**
      * Esta função insere um novo nó, com um determinado produto e quantidade, na raiz de uma árvore Rubro-Negra.
@@ -538,6 +514,7 @@ Node* insertRoot(Node* root, char* produto, int quantidade) {
      * @param quantidade A quantidade do produto.
      * @return A raiz da árvore após a inserção e o auto-balanceamento.
      */
+
     // Primeiro, a função verifica se o produto já existe na árvore.
     int existe = verificaSeExiste(root, produto);
 
@@ -546,93 +523,68 @@ Node* insertRoot(Node* root, char* produto, int quantidade) {
         printf("\nProduto ja existente, adicione outro\n");
         return root;
     }
-
+    
     // Se o produto não existe, ele é inserido na árvore.
     root = insert(root, produto, quantidade);
 
     // A função returnFamilia() é chamada para obter a estrutura da família do nó inserido, que inclui o nó pai, avô e tio.
     FPTA* familia = returnFamilia(root, produto);
+    if (familia->avo != NULL) {
+        FPTA* familia_old = returnFamilia(root, familia->pai->produto);
+    }
 
     // Variáveis auxiliares para ajudar no balanceamento da árvore.
     FPTA* familia_aux;
     Node* bisavo;
 
-    // O laço while é usado para continuar o balanceamento da árvore até que o nó pai do nó atual seja nulo (o nó atual é a raiz) ou o nó pai seja preto.
-    while (familia->avo != NULL) {
-
-        // Se o tio, pai e filho são todos vermelhos, eles são recoloridos.
+    // Rotações e recolorações para manter as propriedades da árvore Rubro-Negra
+    while (familia->avo != NULL) { // Se o pai é vermelho
+        // Caso do tio ser vermelho e pai tambem vermelho
         if (isRed(familia->tio) && isRed(familia->pai) && isRed(familia->filho)){
             familia->pai->cor = BLACK;
             familia->tio->cor = BLACK;
             familia->avo->cor = RED;
-            // Depois de recolorir, a família é atualizada para o avô do nó atual.
             familia = returnFamilia(root, familia->avo->produto);
 
-        // Se a família não for recolorida, a rotação precisa ser realizada para preservar as propriedades da árvore Rubro-Negra.
+        // Caso o tio for negro ou null
         } else {
-            // Existem diferentes cenários possíveis dependendo da estrutura da família, cada um dos quais requer uma rotação diferente para corrigir.
-
-            // Se o nó pai é o filho esquerdo do avô e o nó atual é o filho direito do pai, uma rotação à esquerda é realizada.
-            if ((familia->avo->esq == familia->pai) && (familia->filho == familia->pai->dir) &&
+            // Rotacao a esquerda CASO 2, pai a esquerda do avo, filho a direita do pai e ambos vermelhos
+            if ((familia->avo->esq == familia->pai) && (familia->filho == familia->pai->dir) && 
                 (familia->filho->cor == RED) && (familia->pai->cor == RED)) {
-                
-                // Realiza a rotação.
                 familia->pai->dir = familia->filho->esq;
                 familia->filho->esq = familia->pai;
                 familia->avo->esq = familia->filho;
-                
-                // Atualiza a família após a rotação.
                 familia = returnFamilia(root, familia->pai->produto);
-                
-                // Continua a rotação.
                 familia->avo->esq = familia->pai->dir;
                 familia->pai->dir = familia->avo;
-                
-                // Recolorir o pai e o avô após a rotação.
                 familia->pai->cor = BLACK;
                 familia->avo->cor = RED;
-
-                // Se a raiz foi alterada durante a rotação, atualiza a raiz.
                 if (root == familia->avo) {
                     root = familia->pai;
                 }
-
-                // Atualiza a família após a rotação.
                 familia = returnFamilia(root, familia->pai->produto);
 
-            // Se o nó pai é o filho direito do avô e o nó atual é o filho esquerdo do pai, uma rotação à direita é realizada.
-            } else if ((familia->avo->dir == familia->pai) && (familia->filho == familia->pai->esq) &&
+            // Rotacao a direita CASO 2, pai a direita do avo, filho a esquerda do pai e ambos vermelhos
+            } else if ((familia->avo->dir == familia->pai) && (familia->filho == familia->pai->esq) && 
                 (familia->filho->cor == RED) && (familia->pai->cor == RED)) {
-
-                // Realiza a rotação.
                 familia->pai->esq = familia->filho->dir;
                 familia->filho->dir = familia->pai;
                 familia->avo->dir = familia->filho;
-                
-                // Atualiza a família após a rotação.
                 familia = returnFamilia(root, familia->pai->produto);
-                
-                // Continua a rotação.
                 familia->avo->dir = familia->pai->esq;
                 familia->pai->esq = familia->avo;
-                
-                // Recolorir o pai e o avô após a rotação.
+                // Troca as cores
                 familia->pai->cor = BLACK;
                 familia->avo->cor = RED;
-
-                // Se a raiz foi alterada durante a rotação, atualiza a raiz.
                 if (root == familia->avo) {
                     root = familia->pai;
                 }
-
-                // Atualiza a família após a rotação.
+                // Define o pai como novo filho para ir ate a raiz
                 familia = returnFamilia(root, familia->pai->produto);
 
-            // Se o nó pai é o filho esquerdo do avô e o nó atual é o filho esquerdo do pai, uma rotação à direita é realizada.
-            } else if ((familia->avo->esq == familia->pai) && (familia->filho == familia->pai->esq) &&
+            // Rotacao a direita CASO 1, pai a esquerda do avo e filho a esquerda do pai
+            } else if ((familia->avo->esq == familia->pai) && (familia->filho == familia->pai->esq) && 
                 (familia->filho->cor == RED) && (familia->pai->cor == RED)) {
-
-                // Realiza a rotação.
                 familia_aux = returnFamilia(root, familia->pai->produto);
                 bisavo = familia_aux->avo;
                 if (bisavo != NULL) {
@@ -648,26 +600,25 @@ Node* insertRoot(Node* root, char* produto, int quantidade) {
                     familia->avo->esq = familia->pai->dir;
                     familia->pai->dir = familia->avo;
                 }
-
-                // Recolorir o pai e o avô após a rotação.
+                // Troca as cores
                 familia->pai->cor = BLACK;
                 familia->avo->cor = RED;
-
-                //Atualiza a família após a rotação.
+                if (root == familia->avo) {
+                    root = familia->pai;
+                }
+                // Define o pai como novo filho para ir ate a raiz
                 familia = returnFamilia(root, familia->pai->produto);
 
-            // Se o nó pai é o filho direito do avô e o nó atual é o filho direito do pai, uma rotação à esquerda é realizada.
-            } else if ((familia->avo->dir == familia->pai) && (familia->filho == familia->pai->dir) &&
+            // Rotacao a esquerda CASO 1, pai a direita do avo e filho a direita do pai
+            } else if ((familia->avo->dir == familia->pai) && (familia->filho == familia->pai->dir) && 
                 (familia->filho->cor == RED) && (familia->pai->cor == RED)) {
-
-                // Realiza a rotação.
                 familia_aux = returnFamilia(root, familia->pai->produto);
                 bisavo = familia_aux->avo;
                 if (bisavo != NULL) {
-                    if (bisavo->esq == familia->avo) {
-                        bisavo->esq = familia->pai;
-                    } else {
+                    if (bisavo->dir == familia->avo) {
                         bisavo->dir = familia->pai;
+                    } else {
+                        bisavo->esq = familia->pai;
                     }
                     familia->avo->dir = familia->pai->esq;
                     familia->pai->esq = familia->avo;
@@ -676,19 +627,22 @@ Node* insertRoot(Node* root, char* produto, int quantidade) {
                     familia->avo->dir = familia->pai->esq;
                     familia->pai->esq = familia->avo;
                 }
-
-                // Recolorir o pai e o avô após a rotação.
+                // Troca as cores
                 familia->pai->cor = BLACK;
                 familia->avo->cor = RED;
+                if (root == familia->avo) {
+                    root = familia->pai;
+                }
+                // Define o pai como novo filho para ir ate a raiz
+                familia = returnFamilia(root, familia->pai->produto);
 
-                // Atualiza a família após a rotação.
+            } else {
                 familia = returnFamilia(root, familia->pai->produto);
             }
         }
     }
 
-    // No final, a raiz da árvore é sempre pintada de preto para garantir a propriedade da árvore Rubro-Negra.
-    root->cor = BLACK;
+    root->cor = BLACK; // Garante que a raiz é sempre preta
     return root;
 }
 
