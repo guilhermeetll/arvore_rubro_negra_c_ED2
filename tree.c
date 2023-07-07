@@ -34,6 +34,16 @@ int isRed(Node* x)
 
 Node* find_sucessor(Node* rbt)
 {
+    /* 
+        Função resposável por capturar o sucessor de um nó removido 
+        
+        Args: 
+            rbt (Node), nó que vai ser deletado.
+
+        Returns: 
+            nó sucessor ou nó EXTERNAL.
+
+    */
     if (!rbt || rbt == EXTERNAL) return EXTERNAL;
     if (!rbt->esq || rbt->esq == EXTERNAL) return rbt;
     else find_sucessor(rbt->esq);
@@ -41,6 +51,17 @@ Node* find_sucessor(Node* rbt)
 
 Node* get_pai(Node** raiz, Node* no)
 {
+    /*
+        Função que busca o nó "pai" de outro nó.
+
+        Args: 
+            raiz (Node): raiz da árvore;
+            no (Node): Nó que se dejesa buscar o pai;
+
+        Returns:
+            External, caso o nó seja a raiz;
+            Nó antecessor do nó passado;
+    */
     Node* pai = (*raiz);
     while (pai)
     {
@@ -50,7 +71,6 @@ Node* get_pai(Node** raiz, Node* no)
                 return pai;
         else if (pai->esq && strcmp(pai->esq->produto, no->produto) == 0)
                 return pai;
-            
         else if (strcmp(pai->produto, no->produto) > 0)
             pai = pai->esq;
         else pai = pai->dir;
