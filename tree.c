@@ -3,26 +3,36 @@
 #include "tree.h"
 #include "string.h"
 
-
+Node* EXTERNAL;
+Node* createEXTERNAL(){
+    Node* newNo = (Node*)malloc(sizeof(Node));
+    if (!newNo)
+    {
+        return NULL;
+    }
+    newNo->cor = BLACK;
+    newNo->dir = newNo->esq = NULL;
+    strcmp(newNo->produto, "NULL");
+    newNo->qtd_produto = 0;
+    return newNo;
+}
 
 Node* criar_no(char* produto)
 {
     Node* no = malloc(sizeof(Node));
     no->cor = BLACK;
-    no->esq = NULL;
-    no->dir = NULL;
+    no->esq = EXTERNAL;
+    no->dir = EXTERNAL;
     strcpy(no->produto, produto);
     no->qtd_produto = 0;
     return no;
 }
 
 
-
-
 Node* find_sucessor(Node* rbt)
 {
-    if (!rbt) return NULL;
-    if (!rbt->esq) return rbt;
+    if (!rbt || rbt == EXTERNAL) return EXTERNAL;
+    if (!rbt->esq || rbt->esq == EXTERNAL) return rbt;
     else find_sucessor(rbt->esq);
 }
 
@@ -32,7 +42,7 @@ Node* get_pai(Node** raiz, Node* no)
     while (pai)
     {
         if (strcmp(pai->produto, no->produto) == 0)
-            return NULL;
+            return EXTERNAL;
         else if (pai->dir && strcmp(pai->dir->produto, no->produto) == 0)
                 return pai;
         else if (pai->esq && strcmp(pai->esq->produto, no->produto) == 0)
@@ -47,7 +57,7 @@ Node* get_pai(Node** raiz, Node* no)
 void transfere_pai(Node** raiz, Node* rbt, Node* target)
 {
     Node* paiRBT = get_pai(raiz, rbt);
-    if (!paiRBT)
+    if (paiRBT == EXTERNAL)
         (*raiz) = target;
     else if (strcmp(paiRBT->esq->produto, rbt->produto) == 0)
         paiRBT->esq = target;
@@ -57,66 +67,136 @@ void transfere_pai(Node** raiz, Node* rbt, Node* target)
 
 void left(Node** raiz, Node* pivo)
 {
-    Node* y = pivo->esq;
-    Node* paiPivo = get_pai(&(*raiz), pivo);
-    pivo->esq = y->dir;
-    if (pivo->esq)
-        paiPivo->esq = pivo;
-    if (!paiPivo)
-        (*raiz) = y;
-    else if (strcmp(pivo->produto, paiPivo->esq->produto))
-        paiPivo->esq = y;
-    else 
-        paiPivo->dir = y;
-    y->dir = pivo;
-    paiPivo = y;
-}
-
-void right(Node** raiz, Node* pivo)
-{
     Node* y = pivo->dir;
     Node* paiPivo = get_pai(&(*raiz), pivo);
+
     pivo->dir = y->esq;
-    if (pivo->dir)
+    if (pivo->dir != EXTERNAL)
         paiPivo->dir = pivo;
-    if (!paiPivo)
+    if (paiPivo == EXTERNAL)
         (*raiz) = y;
-    else if (strcmp(pivo->produto, paiPivo->esq->produto))
+    else if (strcmp(pivo->produto, paiPivo->esq->produto) == 0)
         paiPivo->esq = y;
     else 
         paiPivo->dir = y;
     y->esq = pivo;
-    paiPivo = y;
 }
 
-// void deleteFixup(Node** raiz, Node* rbt)
-// {
-//     Node* w;
+void right(Node** raiz, Node* pivo)
+{
+    Node* y = pivo->esq;
+    Node* paiPivo = get_pai(&(*raiz), pivo);
 
-//     while (strcmp((*raiz)->produto, rbt->produto) != 0 && rbt->cor == BLACK)
-//     {
-//         Node* paiRBT = get_pai(&(*raiz), rbt);
-//         if (strcmp(paiRBT->esq->produto, rbt->produto) == 0)
-//         {
-            
-//         }
-//     }
-    
-// }
+    pivo->esq = y->dir;
+    if (pivo->dir != EXTERNAL)
+        paiPivo->esq = pivo;
+    if (paiPivo == EXTERNAL)
+        (*raiz) = y;
+    else if (strcmp(pivo->produto, paiPivo->esq->produto) == 0)
+        paiPivo->esq = y;
+    else 
+        paiPivo->dir = y;
+    y->dir = pivo;
+}
+
+void deleteFixup(Node** raiz, Node* rbt, Node* pai)
+{
+    Node* siblingRbt;
+    // O loop se repete ate que a cor preta extra deixa de existir.
+    while (rbt != (*raiz) && rbt->cor == BLACK)
+    {
+        // Caso rbt seja filho a esquerda de seu pai.
+        if (rbt == pai->esq){
+            siblingRbt = pai->dir;
+            // Caso 1: O irmao de rbt eh vermelho.
+            if (siblingRbt->cor == RED){
+                siblingRbt->cor = BLACK;
+                pai->cor = RED;
+                left(raiz, pai);
+                siblingRbt = pai->dir;
+            }
+            // Caso 2: O irmao de rbt eh negro e os 2 filhos deste irmao tambem sao negros.
+            if (siblingRbt->esq->cor == BLACK && siblingRbt->dir->cor == BLACK){
+                siblingRbt->cor = RED;
+                rbt = pai;
+            }
+
+            else{
+                 if (siblingRbt->dir->cor == BLACK){
+                    // Caso 3: O irmao de rbt eh negro,
+                    // e este irmao tem filho a esquerda vermelho e filho a direita negro.
+                    siblingRbt->esq->cor = BLACK;
+                    siblingRbt->cor = RED;
+                    right(raiz, siblingRbt);
+                    siblingRbt = pai->dir;
+                }
+                // Caso 4: O irmao de rbt eh negro,
+                // e este irmao tem filho a direita vermelho.
+                siblingRbt->cor = pai->cor;
+                pai->cor = BLACK;
+                siblingRbt->dir->cor = BLACK;
+                left(raiz, pai);
+                // Para sair do loop.
+                rbt = (*raiz);
+            }
+        }
+        // Caso rbt seja filho a direita de seu pai.
+        else {
+            siblingRbt = pai->esq;
+            // Caso 1: O irmao de rbt eh vermelho.
+            if (siblingRbt->cor == RED){
+
+                siblingRbt->cor = BLACK;
+                pai->cor = RED;
+                right(raiz, pai);
+                siblingRbt = pai->esq;
+            }
+            // Caso 2: O irmao de rbt eh negro e os 2 filhos deste irmao tambem sao negros.
+            if (siblingRbt->esq->cor == BLACK && siblingRbt->dir->cor == BLACK){
+                siblingRbt->cor = RED;
+                rbt = pai;
+            }
+
+            else{
+                // Caso 3: O irmao de rbt eh negro,
+                // e este irmao tem filho a direita vermelho e filho a esquerda negro.
+                 if (siblingRbt->esq->cor == BLACK){
+  
+                    siblingRbt->dir->cor = BLACK;
+                    siblingRbt->cor = RED;
+                    left(raiz, siblingRbt);
+                    siblingRbt = pai->esq;
+                }
+                // Caso 4: O irmao de rbt eh negro,
+                // e este irmao tem filho a esquerda vermelho.
+                siblingRbt->cor = pai->cor;
+                pai->cor = BLACK;
+                siblingRbt->esq->cor = BLACK;
+                right(raiz, pai);
+                // Para sair do loop.
+                rbt = (*raiz);
+            }
+        }
+    }
+    rbt->cor = BLACK;
+}
 
 void remocao(Node** raiz, Node* delete)
 {
     if (!(*raiz) || !delete) return;
-    Node* auxSucessor = delete;
+    Node* auxSucessor;
     Node* sucessor = delete;
     Cor originalCor = sucessor->cor;
-    if (!delete->esq) 
+    Node* pai;
+    if (delete->esq == EXTERNAL) 
     {
+        pai = get_pai(&(*raiz), delete);
         auxSucessor = delete->dir;
         transfere_pai(&(*raiz), delete, delete->dir);
     }
-    else if (!delete->dir)
+    else if (delete->dir == EXTERNAL)
     {
+        pai = get_pai(&(*raiz), delete);
         auxSucessor = delete->esq;
         transfere_pai(&(*raiz), delete, delete->esq);
     }
@@ -126,9 +206,10 @@ void remocao(Node** raiz, Node* delete)
         originalCor = sucessor->cor;
         auxSucessor = sucessor->dir;
         Node* paiSucessor = get_pai(&(*raiz), sucessor);
-        if (strcmp(paiSucessor->produto, delete->produto) == 0)
+        pai = paiSucessor;
+        if (paiSucessor != EXTERNAL && (paiSucessor->produto, delete->produto) == 0)
         {
-            Node* paiAux = sucessor;
+            pai = sucessor;
         }
         else
         {
@@ -138,16 +219,17 @@ void remocao(Node** raiz, Node* delete)
         transfere_pai(&(*raiz), delete, sucessor);
         sucessor->esq = delete->esq;
         sucessor->cor = delete->cor;
+        printf("%s\n", sucessor->produto);
     }
-    // if (originalCor == BLACK)
-    // {
-    //     deleteFixup(&(*raiz), auxSucessor);
-    // }
+    if (originalCor == BLACK)
+    {
+        deleteFixup(raiz, auxSucessor, pai);
+    }
 }
 
 void insert_no(Node** raiz, char* produto)
 {
-    if (*raiz == NULL)
+    if (*raiz == EXTERNAL)
     {
         *raiz = criar_no(produto);
         (*raiz)->cor = RED;
@@ -164,7 +246,7 @@ void insert_no(Node** raiz, char* produto)
 
 void imprime(Node* raiz, int b)
 {
-    if (raiz)
+    if (raiz != EXTERNAL)
     {
         imprime(raiz->dir, b+1);
         for (int i = 0; i < b; i++) printf("      ");

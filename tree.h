@@ -1,6 +1,10 @@
 #ifndef TREE_H
 #define TREE_H
 
+#include "stdio.h"
+#include "stdlib.h"
+#include "string.h"
+
 typedef enum cor
 {
     BLACK,
@@ -21,6 +25,8 @@ typedef struct node
     struct node *dir;
 }Node;
 
+extern Node* EXTERNAL;
+Node* createEXTERNAL();
 
 void remocao(Node**, Node*);
 void insert_no(Node**, char*);

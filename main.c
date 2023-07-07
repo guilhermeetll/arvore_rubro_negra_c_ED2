@@ -17,12 +17,13 @@ void menu(){
 
 int main()
 {
-    Node* raiz = NULL;
+    EXTERNAL = createEXTERNAL();
+    Node* raiz = EXTERNAL;
     char produto[200];
     int resp;
     insert_no(&raiz, "33");
-    insert_no(&raiz, "15");
     insert_no(&raiz, "47");
+    insert_no(&raiz, "15");    
     insert_no(&raiz, "11");
     insert_no(&raiz, "20");
     insert_no(&raiz, "38");
