@@ -20,24 +20,9 @@ int main()
     EXTERNAL = createEXTERNAL();
     Node* raiz = EXTERNAL;
     char produto[200];
-    int resp;
-    insert_no(&raiz, "33");
-    insert_no(&raiz, "47");
-    insert_no(&raiz, "15");    
-    insert_no(&raiz, "11");
-    insert_no(&raiz, "20");
-    insert_no(&raiz, "38");
-    insert_no(&raiz, "51");
-    insert_no(&raiz, "18");
-    insert_no(&raiz, "49");
-    insert_no(&raiz, "60");
-    insert_no(&raiz, "10");
+    int resp, quantidade;
+    char nome[100];
 
-    raiz->esq->esq->cor = BLACK;
-    raiz->esq->dir->cor = BLACK;
-    raiz->dir->dir->cor = BLACK;
-    raiz->dir->esq->cor = BLACK;
-    raiz->cor = BLACK;
     do
     {   menu();
         printf(">> ");
@@ -45,9 +30,11 @@ int main()
         switch (resp)
         {
         case 1:
-            // printf("Informe o produto que deseja cadastrar: \n>> ");
-            // scanf("%s", produto);
-            // insert_no(&raiz, produto);
+            printf("Digite o nome do produto >> ");
+            scanf("%s", nome);
+            printf("Digite a quantidade >> ");
+            scanf("%d", &quantidade);
+            raiz = insertRoot(raiz, nome, quantidade);
             break;
         case 2:
             char t[2];
@@ -100,10 +87,12 @@ int main()
                 }
             break;
         case 4:
-            lista_produtos(raiz, resp);
+            printf("Produtos: ");
+            printTreeHelper(raiz);
             break;
         case 5:
-            lista_produtos(raiz, resp);
+            printf("Produtos em estoque: ");
+            printEstoque(raiz);
             break;
         case 6:
             imprime(raiz, 1);   

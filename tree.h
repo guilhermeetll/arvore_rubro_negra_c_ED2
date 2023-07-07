@@ -25,18 +25,30 @@ typedef struct node
     struct node *dir;
 }Node;
 
+typedef struct FPTA {
+    Node* filho; //Armazena filho que no caso é o valor que procuramos
+    Node* pai;   //Armazena Pai
+    Node* tio;   //Armazena Tio
+    Node* avo;   //Armazena Avo
+}FPTA;
+
 extern Node* EXTERNAL;
 Node* createEXTERNAL();
 
 void remocao(Node**, Node*);
-void insert_no(Node**, char*);
 
-Node* criar_no(char*);
+Node* insertRoot(Node*, char*, int);
+
+Node* insert(Node*, char*, int);
+
+Node* criar_no(char*, int);
 
 void imprime(Node* , int);
 
 Node* busca(Node*, char*);
 
-void lista_produtos(Node*, int);
+void printEstoque(Node*);
+
+void printTreeHelper(Node*);
 
 #endif
