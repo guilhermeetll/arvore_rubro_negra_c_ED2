@@ -1,201 +1,113 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include "stdio.h"
+#include "stdlib.h"
+#include "tree.h"
+#include "string.h"
 
-// Definição das cores
-#define RED 0
-#define BLACK 1
-
-// Definição da estrutura do nó
-typedef struct Node {
-    int data;
-    int color;
-    struct Node* left;
-    struct Node* right;
-    struct Node* parent;
-} Node;
-
-// Função auxiliar para criar um novo nó
-Node* createNode(int data) {
-    Node* newNode = (Node*)malloc(sizeof(Node));
-    newNode->data = data;
-    newNode->color = RED;
-    newNode->left = NULL;
-    newNode->right = NULL;
-    newNode->parent = NULL;
-    return newNode;
+void menu(){
+    printf("***************************************************\n");
+    printf("| 1- Cadastrar produto                            |\n");
+    printf("| 2- Excluir produto                              |\n");
+    printf("| 3- Atualizar a quantidade do produto no estoque |\n");
+    printf("| 4- Listar os produtos cadastrados               |\n");
+    printf("| 5- Listar os  produtos em estoque               |\n");
+    printf("| 6- Imprimir a arvore                            |\n");
+    printf("| 7- Sair                                         |\n");
+    printf("***************************************************\n");
 }
 
-// Função auxiliar para trocar os nós
-void swapNodes(Node** root, Node* x, Node* y) {
-    Node* parent_x = x->parent;
-    Node* parent_y = y->parent;
+int main()
+{
+    EXTERNAL = createEXTERNAL();
+    Node* raiz = EXTERNAL;
+    char produto[200];
+    int resp, quantidade;
+    char nome[100];
 
-    if (parent_x == NULL)
-        *root = y;
-    else if (x == parent_x->left)
-        parent_x->left = y;
-    else
-        parent_x->right = y;
-
-    if (parent_y != NULL)
-        y->parent = parent_x;
-
-    x->parent = y;
-    y->parent = parent_x;
-}
-
-// Função auxiliar para realizar uma rotação à esquerda
-void leftRotate(Node** root, Node* x) {
-    Node* y = x->right;
-    x->right = y->left;
-
-    if (y->left != NULL)
-        y->left->parent = x;
-
-    y->parent = x->parent;
-
-    if (x->parent == NULL)
-        *root = y;
-    else if (x == x->parent->left)
-        x->parent->left = y;
-    else
-        x->parent->right = y;
-
-    y->left = x;
-    x->parent = y;
-}
-
-// Função auxiliar para realizar uma rotação à direita
-void rightRotate(Node** root, Node* x) {
-    Node* y = x->left;
-    x->left = y->right;
-
-    if (y->right != NULL)
-        y->right->parent = x;
-
-    y->parent = x->parent;
-
-    if (x->parent == NULL)
-        *root = y;
-    else if (x == x->parent->left)
-        x->parent->left = y;
-    else
-        x->parent->right = y;
-
-    y->right = x;
-    x->parent = y;
-}
-
-// Função auxiliar para corrigir a árvore após a inserção de um nó
-void fixInsertion(Node** root, Node* node) {
-    while (node != *root && node->parent->color == RED) {
-        Node* parent = node->parent;
-        Node* grandparent = parent->parent;
-
-        if (parent == grandparent->left) {
-            Node* uncle = grandparent->right;
-
-            if (uncle != NULL && uncle->color == RED) {
-                parent->color = BLACK;
-                uncle->color = BLACK;
-                grandparent->color = RED;
-                node = grandparent;
-            } else {
-                if (node == parent->right) {
-                    node = parent;
-                    leftRotate(root, node);
-                }
-
-                parent = node->parent;
-                grandparent = parent->parent;
-                parent->color = BLACK;
-                grandparent->color = RED;
-                rightRotate(root, grandparent);
+    do
+    {   menu();
+        printf(">> ");
+        scanf("%d", &resp);
+        switch (resp)
+        {
+        case 1:
+            printf("Digite o nome do produto >> ");
+            scanf("%s", nome);
+            printf("Digite a quantidade >> ");
+            scanf("%d", &quantidade);
+            raiz = insertRoot(raiz, nome, quantidade);
+            break;
+        case 2:
+            char t[2];
+            printf("Informe o produto que deseja remover: ");
+            fflush(stdin);
+            scanf("%s", t);
+            Node* node = busca(raiz, t);
+            if (!node)
+            {
+                printf("O produto não existe!\n");
+                break;
             }
-        } else {
-            Node* uncle = grandparent->left;
-
-            if (uncle != NULL && uncle->color == RED) {
-                parent->color = BLACK;
-                uncle->color = BLACK;
-                grandparent->color = RED;
-                node = grandparent;
-            } else {
-                if (node == parent->left) {
-                    node = parent;
-                    rightRotate(root, node);
+            Node* percorre = raiz;
+            Node* pai = NULL;
+            while (True)
+            {
+                
+                if (raiz == NULL) break;
+                if (strcmp(percorre->produto, node->produto) == 0)
+                {   
+                    remocao(&raiz, node);
+                    break;
                 }
-
-                parent = node->parent;
-                grandparent = parent->parent;
-                parent->color = BLACK;
-                grandparent->color = RED;
-                leftRotate(root, grandparent);
+                else if (strcmp(percorre->produto, node->produto) > 0)
+                {
+                    pai = percorre;
+                    percorre = percorre->esq;
+                }
+                else if (strcmp(percorre->produto, node->produto) < 0) 
+                {
+                    pai = percorre;
+                    percorre = percorre->dir;
+                }
+                else break;
             }
+            break;
+        case 3:
+            int qtd_produto;
+            fflush(stdin);
+            printf("Informe o produto e a quantidade que deseja atualizar: \n>> ");
+            scanf("%s%d", produto,&qtd_produto);
+                Node* no = malloc(sizeof(Node));
+                no = busca(raiz, produto);
+                if (no == NULL){
+                    printf("Registro não encontrado\n");
+                    break;
+                }
+                else {
+                    no->qtd_produto = qtd_produto;
+                    printf("*****************\n");
+                    printf("|produto: %s\n", no->produto);
+                    printf("|quantidade: %d \n", no->qtd_produto);
+                    printf("*****************\n");
+                    break;
+                }
+            break;
+        case 4:
+            printf("Produtos: ");
+            printTreeHelper(raiz);
+            break;
+        case 5:
+            printf("Produtos em estoque: ");
+            printEstoque(raiz);
+            break;
+        case 6:
+            imprime(raiz, 1);   
+            break;
+        case 7:
+            printf("Exit...\n");
+            break;
+        default:
+            break;
         }
-    }
-
-    (*root)->color = BLACK;
-}
-
-// Função para inserir um nó na árvore rubro-negra
-void insertNode(Node** root, int data) {
-    Node* newNode = createNode(data);
-    Node* parent = NULL;
-    Node* current = *root;
-
-    while (current != NULL) {
-        parent = current;
-
-        if (data < current->data)
-            current = current->left;
-        else if (data > current->data)
-            current = current->right;
-        else {
-            printf("O nó com valor %d já existe na árvore.\n", data);
-            free(newNode);
-            return;
-        }
-    }
-
-    newNode->parent = parent;
-
-    if (parent == NULL)
-        *root = newNode;
-    else if (data < parent->data)
-        parent->left = newNode;
-    else
-        parent->right = newNode;
-
-    fixInsertion(root, newNode);
-}
-
-// Função auxiliar para imprimir a árvore em ordem
-void inOrderTraversal(Node* root) {
-    if (root != NULL) {
-        inOrderTraversal(root->left);
-        printf("%d ", root->data);
-        inOrderTraversal(root->right);
-    }
-}
-
-// Função principal
-int main() {
-    Node* root = NULL;
-
-    insertNode(&root, 7);
-    insertNode(&root, 3);
-    insertNode(&root, 18);
-    insertNode(&root, 10);
-    insertNode(&root, 22);
-    insertNode(&root, 8);
-    insertNode(&root, 11);
-    insertNode(&root, 26);
-    insertNode(&root, 2);
-
-    printf("Árvore em ordem: ");
-    inOrderTraversal(root);
-    printf("\n");
-
+    }while (resp != 7);
     return 0;
 }
