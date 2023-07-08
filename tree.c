@@ -661,7 +661,7 @@ void imprime(Node* raiz, int b)
 
         // Adiciona recuo para formatar a impressão
         for (int i = 0; i < b; i++)
-            printf("      ");
+            printf("\t");
 
         // Imprime o nó atual, exibindo sua cor e produto
         raiz->cor == RED ? printf("RED %s\n", raiz->produto) : printf("BLACK %s\n", raiz->produto);

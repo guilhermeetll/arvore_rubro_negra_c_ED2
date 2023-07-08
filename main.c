@@ -117,7 +117,7 @@ int main()
             break;
         case 4: // Listando todos os produtos cadastrados
             printf("Produtos: ");
-            printTreeHelper(raiz); // Imprimindo a árvore
+            printTreeHelper(raiz); // Imprimindo a lista
             break;
         case 5: // Listando todos os produtos em estoque
             printf("Produtos em estoque: ");
